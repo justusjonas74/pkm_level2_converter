@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema version="1.7.1-SNAPSHOT"
+    targetNamespace="http://vdv/ka/pkm/2" 
+    xmlns:tns="http://vdv/ka/pkm/2"
+    xmlns:ion="http://vdv/ka/ion/2"
+    xmlns:ct="http://vdv/ka/common/types/2" 
+    xmlns:ka="http://vdv/ka/common/2"
+    xmlns:pkm="http://vdv/ka/pkm/2"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
+
+    <xs:import namespace="http://vdv/ka/common/types/2" schemaLocation="../../../ka/common/types/2/XML-Schema_Common_Types.xsd" />
+    <xs:import namespace="http://vdv/ka/common/2" schemaLocation="../../../ka/common/2/XML-Schema_KA_Common.xsd" />
+    <xs:import namespace="http://vdv/ka/ion/2" schemaLocation="../../../ka/ion/2/XML-Schema_ION.xsd" />
+    <xs:include xmlns="http://vdv/ka/pkm/2" schemaLocation="../../../ka/pkm/2/XML-Schema_PKM.xsd"/>
+    
+  <xs:annotation>
+    <xs:documentation>
+        Ersetzt XML-Schema_PKM_TX aus der Version 1.3.0 mit Namensraum http://vdv/ka/pkm/1.
+        Fuer das neue Modul (zusammen mit KA Release 1.6.0) wird der neue Namensraum http://vdv/ka/pkm/2 verwendet.
+        Die Hilfsdatentypen (TX_MODUL, etc.) in diesem Schema mussten aufgrund des neuen 
+        Namensraumes gedoppelt werden.
+    </xs:documentation>
+  </xs:annotation>  
+
+  <xs:simpleType name="Modulversion_NUMMER">
+    <xs:annotation>
+        <xs:documentation>
+            Die Modulversion_NUMMER identifiziert einen Ergebnisstand innerhalb eines Entwicklungszyklus.
+            Eine gueltige Modulversion_NUMMER ist groeßer als 0.            
+        </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="ct:ReferenceNumberFour"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="Modulstatus_CODE">
+    <xs:annotation>
+      <xs:documentation>
+        Der Modulstatus_CODE gibt den Bearbeitungsstatus eines Produkt- oder Kontrollmoduls an.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="ct:ReferenceNumberOne">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:documentation>Undefiniert</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:documentation>Entwurf</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:documentation>Freigegeben</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="TX_MODUL" abstract="true">
+    <xs:annotation>
+      <xs:documentation>
+           Ein TX_MODUL gilt für alle Transaktionsdatensaetze zur Verteilung von Produkt- und Kontrollmodulen. 
+           Dieser Datensatz enthaelt Auszuege aus den Modul- und Versionsdaten eines Moduls.      
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+        <xs:element name="modulgueltigkeitsbeginn" type="ct:DateTimeCompact"/>
+        <xs:element name="modulversion" type="tns:Modulversion_NUMMER"/>        
+        <xs:element name="modulstatus" type="tns:Modulstatus_CODE"/>
+        <xs:element name="schnittstellenversion" type="ion:PrintableString"/>
+        <xs:element name="modulnamenszusatz" type="ion:PrintableString"/>
+        <xs:element name="bemerkung" type="ion:PrintableString"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="TX_MODUL_Daten">
+    <xs:annotation>
+      <xs:documentation>
+        Ein TX_MODUL_Daten ist die Auspraegung eines TX_MODUL, 
+        der genau dann verwendet wird, wenn der Transaktionsdatensatz
+         zur Verteilung von Produkt- bzw. Kontrollmodul ein 
+         entsprechendes Modul enthaelt.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:TX_MODUL" />
+    </xs:complexContent>
+  </xs:complexType>  
+
+  <xs:complexType name="TX_MODUL_Bereitstellung">
+    <xs:annotation>
+      <xs:documentation>
+        Ein TX_MODUL_Bereitstellung ist die Auspraegung eines TX_MODUL, 
+        wenn der Transaktionsdatensatz zur Verteilung von Produkt- bzw. 
+        Kontrollmodul kein Modul, sondern nur Informationen zum Download 
+        des entsprechenden Moduls enthaelt.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:TX_MODUL">
+        <xs:sequence>
+            <xs:element name="url" type="ion:PrintableString"></xs:element>
+            <xs:element name="bereitstellungsdatum" type="ct:DateCompact"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>  
+  
+  <xs:complexType name="TX_MODUL_Lieferung">
+    <xs:annotation>
+      <xs:documentation>
+        Ein TX_MODUL_Lieferung ist die Auspraegung eines TX_MODUL, 
+        wenn der Transaktionsdatensatz zur Verteilung von Produkt- bzw. 
+        Kontrollmodul kein Modul, sondern Angaben zur anderweitigen 
+        Lieferung des entsprechenden Moduls enthaelt.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:TX_MODUL">
+        <xs:sequence>
+            <xs:element name="lieferart" type="ion:PrintableString"></xs:element>
+            <xs:element name="sendedatum" type="ct:DateCompact"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="TXVPVTM_Type">
+    <xs:annotation>
+      <xs:documentation>
+          Verteilung von PV-Tarifmodulen, auf deren Basis die Preisberechnung 
+          fuer die ausgegebenen Berechtigungen erfolgt.           
+          Mit TXVPVTM werden Tarifmodule vom PV u.a. an das Produktclearing uebermittelt. 
+          Die Struktur enthaelt neben den eigentlichen Daten des Tarifmoduls auch 
+          ergaenzende Informationen zum Modul, zur Lieferung und Bereitstellung.
+          Als innerer Datentyp wird 
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="ion:TX_BASE_Type">
+      <xs:sequence>
+        <xs:element name="modulinformation" type="tns:TX_MODUL"/>
+            <xs:element name="pvtarifmodul" type="xs:base64Binary" xmime:expectedContentTypes='application/gzip'>
+                <xs:annotation>
+                    <xs:documentation>
+                        Dieses Element enthaelt die PKM Beschreibung in XML,
+                        deren Format in pkm:XML-PVTarifmodul bzw. 
+                        http://vdv/ka/pkm/2:XML-PVTarifmodul definiert wird.                        
+                        Die Daten liegen im XML Format vor, die im gzip Format (RFC1952) komprimiert und anschliessend
+                        Base64 codiert sind.
+                        Um die PKM Beschreibungsdaten zu erhalten, muss eine Dekodierung von Base64 nach Binary
+                        stattfinden. Dieses Binaerformat ist dann gezippt und kann nach Umwandeln in eine Datei
+                        mit einer Standard-Software auf Windows oder Unix entpackt werden.
+                        Das Einbetten der XML-Struktur in gezippten Base64 bietet zum einen den Vorteil der 
+                        Komprimierung von ca. 10:1. Zum anderen ist ein weiterer Vorteil, dass die XSD-Validierung nicht
+                        bei Annahme der Nachricht stattfindet sondern zu einem spaeteren Zeitpunkt 
+                        durchgefuehrt werden kann. Damit kann die Annahme eines PKM-Moduls synchron erfolgen.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+      </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:element name="TXVPVTM" type="tns:TXVPVTM_Type">
+    <xs:annotation>
+        <xs:documentation>
+            Element zur Verwendung im ION (WSDL). Verteilung von PV-Tarifmodulen, 
+            auf deren Basis die Preisberechnung fuer die ausgegebenen Berechtigungen erfolgt.
+        </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+     
+</xs:schema>

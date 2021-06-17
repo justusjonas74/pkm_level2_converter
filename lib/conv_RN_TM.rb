@@ -1,5 +1,5 @@
 require 'nokogiri'
-require 'pry'
+#require 'pry'
 require_relative 'check_xsd'
 
 def convertFileName(file_name)

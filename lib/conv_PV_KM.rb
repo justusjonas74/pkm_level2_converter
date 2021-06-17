@@ -1,18 +1,12 @@
 require 'nokogiri'
+#require 'pry'
 require_relative 'check_xsd'
 
-
 def convertFileName(file_name)
-  puts file_name
   f = file_name.split('_')
-  puts f
   org_id_l3 = f[1].to_i
-  puts org_id_l3
   org_id_l2 = org_id_l3 + 0x8000 
-  puts org_id_l2
-  
   f[1] = org_id_l2.to_s
-  puts f.join("_")
   return f.join("_")
 end
 
@@ -54,42 +48,28 @@ end
 def convert_ids
   #Organisations-ID des DL: 
   #dl-km/organisation/id
-  convert_xpath_l3_id(@xml_doc, 'xmlns:dl-km/xmlns:organisation/xmlns:id')
-  puts "Converted following IDs:"
-  puts "/dl-km/organisation/id = " + @xml_doc.xpath('/xmlns:dl-km/xmlns:organisation/xmlns:id').text
+  # convert_xpath_l3_id(@xml_doc, 'xmlns:dl-km/xmlns:organisation/xmlns:id')
+  # puts "Converted following IDs:"
+  # puts "/dl-km/organisation/id = " + @xml_doc.xpath('/xmlns:dl-km/xmlns:organisation/xmlns:id').text
   
-  @xml_doc.xpath('/xmlns:dl-km/xmlns:kontrollmodul-pool/xmlns:item').each do |node|
-  
+  # @xml_doc.xpath('/xmlns:dl-km/xmlns:kontrollmodul-pool/xmlns:item').each do |node|
+    node = @xml_doc.xpath('/xmlns:pv-km')
     #Organisations-ID des PV:
     #dl-km/kontrollmodul-pool/item/moduldaten/organisation/id
-    convert_xpath_l3_id(node, 'xmlns:moduldaten/xmlns:organisation/xmlns:id')
-    puts "# dl-km/kontrollmodul-pool/item/moduldaten/organisation/id = " + node.xpath('xmlns:moduldaten/xmlns:organisation/xmlns:id').text
+    # convert_xpath_l3_id(node, '/xmlns:pv-km/xmlns:organisation/xmlns:id')
+    convert_xpath_l3_id(node, 'xmlns:organisation/xmlns:id')
+    puts "# pv-km/organisation/id = " + node.xpath('xmlns:organisation/xmlns:id').text
     #Für PVKM zulässige Organisations-IDs der DL:
     #dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id
-    node.xpath('xmlns:moduldaten/xmlns:organisation-pool/xmlns:item').each do |child| 
+    node.xpath('xmlns:organisation-pool/xmlns:item').each do |child| 
       convert_xpath_l3_id(child, 'xmlns:id')
-      puts "## dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id = " + child.xpath('xmlns:id').text
+      puts "## pv-km/organisation-pool/item/id = " + child.xpath('xmlns:id').text
     end
-  end
+  # end
   #Für Anzeige von KVP als Klartext:
   #dl-km/kontrollmodul-pool/item/moduldaten/nummerninterpretation-pool/item[nr=2]/nummerntext-pool/item/nr
 end
 
-if ARGV.first 
-  orig_file_name = ARGV.first
-  convert_pkm(orig_file_name)
-else
-  arr_of_local_xml = Dir["*.xml"]
-  if arr_of_local_xml.empty? 
-	puts "Error: No .xml file found."
-	puts "Usage \"ruby conv.rb filename.xml\""
-  else
-	arr_of_local_xml.each do |xml_file|
-		convert_pkm(xml_file)
-	end
-  end
-  puts "Press ENTER to close."
-  gets
-end
-
+orig_file_name = ARGV.first
+convert_pkm(orig_file_name)
 

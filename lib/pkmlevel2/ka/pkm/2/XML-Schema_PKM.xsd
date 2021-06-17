@@ -1,0 +1,4082 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 2017 Fraunhofer IVI - Kontakt: Torsten Gründel <torsten.gruendel@ivi.fraunhofer.de> -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://vdv/ka/pkm/2" targetNamespace="http://vdv/ka/pkm/2" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.7.1-SNAPSHOT">
+    <!--Zur Dokumentation der Strukturen siehe Technische Spezifikation PKM.
+    Die an den XML-Datentypen verwendeten Kennzeichnungen haben folgende Bedeutung:
+    {Implizites key Attribut} => Elemente mit dieser Kennzeichnung besitzen implizit ein virtuelles „key“ Attribut mit dem Schlüssel, der zur Referenzierung des Elements verwendet wird.
+    {Sortiert nach erstem Element} => Elemente mit dieser Kennzeichnung sind nach dem Inhalt ihres ersten Kindelements sortiert. Die Sortierung erfolgt aufsteigend gemäß dem Datentyp dieser Kindelemente.
+    {Sortiert nach erstem Attribut} => Elemente mit dieser Kennzeichnung sind nach dem Inhalt ihres ersten Attributs sortiert. Die Sortierung erfolgt aufsteigend gemäß dem Datentyp dieser Attribute.
+    {Sortiert nach Inhalt} => Elemente mit dieser Kennzeichnung sind nach ihrem Inhalt sortiert. Die Sortierung erfolgt aufsteigend gemäß dem Datentyp dieser Elemente.-->
+
+    <xs:annotation>
+        <xs:documentation>
+            Neue Version PKM, eingefuert mit KA Release 1.6.0.
+            Diese neue Version ersetzt die bisherige Version PKM, die mit KA Release 1.3.0
+            eingefuehrt wurde. Aus diesem Grund wurde ein neuer Namensraum http://vdv/ka/pkm/2
+            verwendet.
+            Aktuelle Version 1.7.1-SNAPSHOT
+        </xs:documentation>
+    </xs:annotation>
+    
+	<xs:element name="rntm" type="XML-RNTarifmodul"/>
+	<xs:element name="pvtm" type="XML-PVTarifmodul"/>
+	<!--Tarifmodule-->
+	<xs:complexType name="XML-Tarifmodul">
+		<xs:sequence>
+			<xs:element name="version" type="XML-Version-Part"/>
+			<xs:element name="herausgeber" type="XML-Organisation-Part"/>
+			<xs:element name="fachablauf" type="XML-Fachablauf-Part"/>
+			<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+			<xs:element name="sprache-pool" type="XML-Sprache-Pool"/>
+			<xs:element name="eingangsschnittstelle-pool" type="XML-Eingangsschnittstelle-Pool"/>
+			<xs:element name="ausgangsschnittstelle-pool" type="XML-Ausgangsschnittstelle-Pool"/>
+			<xs:element name="ausgangskontext-pool" type="XML-Ausgangskontext-Pool"/>
+			<xs:element name="datentabelle-pool" type="XML-Datentabelle-Pool"/>
+			<xs:element name="schritt-pool" type="XML-Schritt-Pool"/>
+			<xs:element name="variable-pool" type="XML-Variable-Pool"/>
+			<xs:element name="funktion-pool" type="XML-Funktion-Pool"/>
+			<xs:element name="ausnahme-pool" type="XML-Ausnahme-Pool"/>
+			<xs:element name="auswahldaten-pool" type="XML-Auswahldaten-Pool"/>
+			<xs:element name="auswahloption-pool" type="XML-Auswahloption-Pool"/>
+			<xs:element name="ausgangsdaten-pool" type="XML-Ausgangsdaten-Pool"/>
+			<xs:element name="ausgangsdatenfamilie-pool" type="XML-Ausgangsdatenfamilie-Pool" minOccurs="0"/>
+			<xs:element name="organisation-pool" type="XML-Organisation-Pool" minOccurs="0"/>
+			<xs:element name="efmprodukt-pool" type="XML-EFMProdukt-Pool" minOccurs="0"/>
+			<xs:element name="tarifprodukt-pool" type="XML-Tarifprodukt-Pool" minOccurs="0"/>
+			<xs:element name="fremdprodukt-pool" type="XML-Fremdprodukt-Pool" minOccurs="0"/>
+			<xs:element name="produktadapter-pool" type="XML-Produktadapter-Pool" minOccurs="0"/>
+			<xs:element name="produktgruppe-pool" type="XML-Produktgruppe-Pool" minOccurs="0"/>
+			<xs:element name="kontingentierung-pool" type="XML-Kontingentierung-Pool" minOccurs="0"/>
+			<xs:element name="nachfolgekriterium-pool" type="XML-Nachfolgekriterium-Pool" minOccurs="0"/>
+			<xs:element name="abhaengigkeitskriterium-pool" type="XML-Abhaengigkeitskriterium-Pool" minOccurs="0"/>
+			<xs:element name="identifikationsparameter-pool" type="XML-Identifikationsparameter-Pool" minOccurs="0"/>
+			<xs:element name="identifikationsparameteradapter-pool" type="XML-Identifikationsparameteradapter-Pool" minOccurs="0"/>
+			<xs:element name="tarifpunkt-pool" type="XML-Tarifpunkt-Pool" minOccurs="0"/>
+			<xs:element name="tarifpunktadapter-pool" type="XML-Tarifpunktadapter-Pool" minOccurs="0"/>
+			<xs:element name="tarifpunktgruppe-pool" type="XML-Tarifpunktgruppe-Pool" minOccurs="0"/>
+			<xs:element name="tarifpunktreferenz-pool" type="XML-Tarifpunktreferenz-Pool" minOccurs="0"/>
+			<xs:element name="tarifpunktreferenzadapter-pool" type="XML-Tarifpunktreferenzadapter-Pool" minOccurs="0"/>
+			<xs:element name="zuordnungstyp-pool" type="XML-Zuordnungstyp-Pool" minOccurs="0"/>
+			<xs:element name="zuordnungsdaten-matrix" type="XML-Zuordnungsdaten-Matrix" minOccurs="0"/>
+			<xs:element name="zuordnungsausnahme-matrix" type="XML-Zuordnungsausnahme-Matrix" minOccurs="0"/>
+			<xs:element name="wegevariante-pool" type="XML-Wegevariante-Pool" minOccurs="0"/>
+			<xs:element name="wegevariantenadapter-pool" type="XML-Wegevariantenadapter-Pool" minOccurs="0"/>
+			<xs:element name="bewertungstyp-pool" type="XML-Bewertungstyp-Pool" minOccurs="0"/>
+			<xs:element name="bewertungsdaten-pool" type="XML-Bewertungsdaten-Pool" minOccurs="0"/>
+			<xs:element name="bewertungsdaten-matrix" type="XML-Bewertungsdaten-Matrix" minOccurs="0"/>
+			<xs:element name="bewertungsausnahme-matrix" type="XML-Bewertungsausnahme-Matrix" minOccurs="0"/>
+			<xs:element name="linie-pool" type="XML-Linie-Pool" minOccurs="0"/>
+			<xs:element name="linienadapter-pool" type="XML-Linienadapter-Pool" minOccurs="0"/>
+			<xs:element name="verkehrsmitteltyp-pool" type="XML-Verkehrsmitteltyp-Pool" minOccurs="0"/>
+			<xs:element name="verkehrsmitteltypadapter-pool" type="XML-Verkehrsmitteltypadapter-Pool" minOccurs="0"/>
+			<xs:element name="verkehrsmittellinienbezug-pool" type="XML-Verkehrsmittellinienbezug-Pool" minOccurs="0"/>
+			<xs:element name="bezahlart-pool" type="XML-Bezahlart-Pool" minOccurs="0"/>
+			<xs:element name="bezahlartadapter-pool" type="XML-Bezahlartadapter-Pool" minOccurs="0"/>
+			<xs:element name="waehrung-pool" type="XML-Waehrung-Pool" minOccurs="0"/>
+			<xs:element name="waehrungsadapter-pool" type="XML-Waehrungsadapter-Pool" minOccurs="0"/>
+			<xs:element name="zahlungsintervall-pool" type="XML-Zahlungsintervall-Pool" minOccurs="0"/>
+			<xs:element name="zahlungsintervalladapter-pool" type="XML-Zahlungsintervalladapter-Pool" minOccurs="0"/>
+			<xs:element name="mitnahmetyp-pool" type="XML-Mitnahmetyp-Pool" minOccurs="0"/>
+			<xs:element name="mitnahmetypadapter-pool" type="XML-Mitnahmetypadapter-Pool" minOccurs="0"/>
+			<xs:element name="rabattmedientyp-pool" type="XML-Rabattmedientyp-Pool" minOccurs="0"/>
+			<xs:element name="rabattmedientypadapter-pool" type="XML-Rabattmedientypadapter-Pool" minOccurs="0"/>
+			<xs:element name="modulkontext-pool" type="XML-Modulkontext-Pool" minOccurs="0"/>
+			<xs:element name="modulkontextadapter-pool" type="XML-Modulkontextadapter-Pool" minOccurs="0"/>
+			<xs:element name="spezialbedingung-pool" type="XML-Spezialbedingung-Pool" minOccurs="0"/>
+			<xs:element name="tagesbedingung-pool" type="XML-Tagesbedingung-Pool" minOccurs="0"/>
+			<xs:element name="tageszeitbedingung-pool" type="XML-Tageszeitbedingung-Pool" minOccurs="0"/>
+			<xs:element name="zeitraumbedingung-pool" type="XML-Zeitraumbedingung-Pool" minOccurs="0"/>
+			<xs:element name="tarifpunktbedingung-pool" type="XML-Tarifpunktbedingung-Pool" minOccurs="0"/>
+			<xs:element name="bewertungsbedingung-pool" type="XML-Bewertungsbedingung-Pool" minOccurs="0"/>
+			<xs:element name="geosegmentbedingung-pool" type="XML-Geosegmentbedingung-Pool" minOccurs="0"/>
+			<xs:element name="verkehrsmittellinienbedingung-pool" type="XML-Verkehrsmittellinienbedingung-Pool" minOccurs="0"/>
+			<xs:element name="bezahlartbedingung-pool" type="XML-Bezahlartbedingung-Pool" minOccurs="0"/>
+			<xs:element name="zahlungsintervallbedingung-pool" type="XML-Zahlungsintervallbedingung-Pool" minOccurs="0"/>
+			<xs:element name="mitnahmebedingung-pool" type="XML-Mitnahmebedingung-Pool" minOccurs="0"/>
+			<xs:element name="rabattmedienbedingung-pool" type="XML-Rabattmedienbedingung-Pool" minOccurs="0"/>
+			<xs:element name="modulkontextbedingung-pool" type="XML-Modulkontextbedingung-Pool" minOccurs="0"/>
+			<xs:element name="bifainterpretation-pool" type="XML-BIFAInterpretation-Pool" minOccurs="0"/>
+			<xs:element name="nummerninterpretation-pool" type="XML-Nummerninterpretation-Pool"/>
+			<xs:element name="bitleisteninterpretation-pool" type="XML-Bitleisteninterpretation-Pool" minOccurs="0"/>
+			<xs:element name="raumnummerninterpretation-pool" type="XML-Raumnummerninterpretation-Pool" minOccurs="0"/>
+			<xs:element name="schluessel-pool" type="XML-Schluessel-Pool"/>
+			<xs:element name="tarifmodul-pool" type="XML-Tarifmodul-Pool" minOccurs="0"/>
+			<xs:element name="kommentar-pool" type="XML-Kommentar-Pool"/>
+			<xs:element name="signatur" type="XML-Signatur-Part"/>
+			<xs:element name="annotation" type="XML-Annotation-Part"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-PVTarifmodul">
+		<xs:complexContent>
+			<xs:restriction base="XML-Tarifmodul">
+				<xs:sequence>
+					<xs:element name="version" type="XML-Version-Part"/>
+					<xs:element name="herausgeber" type="XML-Organisation-Part"/>
+					<xs:element name="fachablauf" type="XML-PVFachablauf-Part"/>
+					<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					<xs:element name="sprache-pool" type="XML-Sprache-Pool"/>
+					<xs:element name="eingangsschnittstelle-pool" type="XML-Eingangsschnittstelle-Pool"/>
+					<xs:element name="ausgangsschnittstelle-pool" type="XML-Ausgangsschnittstelle-Pool"/>
+					<xs:element name="ausgangskontext-pool" type="XML-Ausgangskontext-Pool"/>
+					<xs:element name="datentabelle-pool" type="XML-Datentabelle-Pool"/>
+					<xs:element name="schritt-pool" type="XML-Schritt-Pool"/>
+					<xs:element name="variable-pool" type="XML-Variable-Pool"/>
+					<xs:element name="funktion-pool" type="XML-Funktion-Pool"/>
+					<xs:element name="ausnahme-pool" type="XML-Ausnahme-Pool"/>
+					<xs:element name="auswahldaten-pool" type="XML-Auswahldaten-Pool"/>
+					<xs:element name="auswahloption-pool" type="XML-Auswahloption-Pool"/>
+					<xs:element name="ausgangsdaten-pool" type="XML-Ausgangsdaten-Pool"/>
+					<xs:element name="ausgangsdatenfamilie-pool" type="XML-Ausgangsdatenfamilie-Pool"/>
+					<xs:element name="organisation-pool" type="XML-Organisation-Pool"/>
+					<xs:element name="efmprodukt-pool" type="XML-EFMProdukt-Pool"/>
+					<xs:element name="tarifprodukt-pool" type="XML-Tarifprodukt-Pool"/>
+					<xs:element name="fremdprodukt-pool" type="XML-Fremdprodukt-Pool"/>
+					<xs:element name="produktgruppe-pool" type="XML-Produktgruppe-Pool"/>
+					<xs:element name="kontingentierung-pool" type="XML-Kontingentierung-Pool"/>
+					<xs:element name="nachfolgekriterium-pool" type="XML-Nachfolgekriterium-Pool"/>
+					<xs:element name="abhaengigkeitskriterium-pool" type="XML-Abhaengigkeitskriterium-Pool"/>
+					<xs:element name="identifikationsparameter-pool" type="XML-Identifikationsparameter-Pool"/>
+					<xs:element name="tarifpunkt-pool" type="XML-Tarifpunkt-Pool"/>
+					<xs:element name="tarifpunktgruppe-pool" type="XML-Tarifpunktgruppe-Pool"/>
+					<xs:element name="tarifpunktreferenz-pool" type="XML-Tarifpunktreferenz-Pool"/>
+					<xs:element name="zuordnungstyp-pool" type="XML-Zuordnungstyp-Pool"/>
+					<xs:element name="zuordnungsdaten-matrix" type="XML-Zuordnungsdaten-Matrix"/>
+					<xs:element name="zuordnungsausnahme-matrix" type="XML-Zuordnungsausnahme-Matrix"/>
+					<xs:element name="wegevariante-pool" type="XML-Wegevariante-Pool"/>
+					<xs:element name="bewertungstyp-pool" type="XML-Bewertungstyp-Pool"/>
+					<xs:element name="bewertungsdaten-pool" type="XML-Bewertungsdaten-Pool"/>
+					<xs:element name="bewertungsdaten-matrix" type="XML-Bewertungsdaten-Matrix"/>
+					<xs:element name="bewertungsausnahme-matrix" type="XML-Bewertungsausnahme-Matrix"/>
+					<xs:element name="linie-pool" type="XML-Linie-Pool"/>
+					<xs:element name="verkehrsmitteltyp-pool" type="XML-Verkehrsmitteltyp-Pool"/>
+					<xs:element name="verkehrsmittellinienbezug-pool" type="XML-Verkehrsmittellinienbezug-Pool"/>
+					<xs:element name="bezahlart-pool" type="XML-Bezahlart-Pool"/>
+					<xs:element name="waehrung-pool" type="XML-Waehrung-Pool"/>
+					<xs:element name="zahlungsintervall-pool" type="XML-Zahlungsintervall-Pool"/>
+					<xs:element name="mitnahmetyp-pool" type="XML-Mitnahmetyp-Pool"/>
+					<xs:element name="rabattmedientyp-pool" type="XML-Rabattmedientyp-Pool"/>
+					<xs:element name="modulkontext-pool" type="XML-Modulkontext-Pool"/>
+					<xs:element name="spezialbedingung-pool" type="XML-Spezialbedingung-Pool"/>
+					<xs:element name="tagesbedingung-pool" type="XML-Tagesbedingung-Pool"/>
+					<xs:element name="tageszeitbedingung-pool" type="XML-Tageszeitbedingung-Pool"/>
+					<xs:element name="zeitraumbedingung-pool" type="XML-Zeitraumbedingung-Pool"/>
+					<xs:element name="tarifpunktbedingung-pool" type="XML-Tarifpunktbedingung-Pool"/>
+					<xs:element name="bewertungsbedingung-pool" type="XML-Bewertungsbedingung-Pool"/>
+					<xs:element name="geosegmentbedingung-pool" type="XML-Geosegmentbedingung-Pool"/>
+					<xs:element name="verkehrsmittellinienbedingung-pool" type="XML-Verkehrsmittellinienbedingung-Pool"/>
+					<xs:element name="bezahlartbedingung-pool" type="XML-Bezahlartbedingung-Pool"/>
+					<xs:element name="zahlungsintervallbedingung-pool" type="XML-Zahlungsintervallbedingung-Pool"/>
+					<xs:element name="mitnahmebedingung-pool" type="XML-Mitnahmebedingung-Pool"/>
+					<xs:element name="rabattmedienbedingung-pool" type="XML-Rabattmedienbedingung-Pool"/>
+					<xs:element name="modulkontextbedingung-pool" type="XML-Modulkontextbedingung-Pool"/>
+					<xs:element name="bifainterpretation-pool" type="XML-BIFAInterpretation-Pool"/>
+					<xs:element name="nummerninterpretation-pool" type="XML-Nummerninterpretation-Pool"/>
+					<xs:element name="bitleisteninterpretation-pool" type="XML-Bitleisteninterpretation-Pool"/>
+					<xs:element name="raumnummerninterpretation-pool" type="XML-Raumnummerninterpretation-Pool"/>
+					<xs:element name="schluessel-pool" type="XML-Schluessel-Pool"/>
+					<xs:element name="kommentar-pool" type="XML-Kommentar-Pool"/>
+					<xs:element name="signatur" type="XML-Signatur-Part"/>
+					<xs:element name="annotation" type="XML-Annotation-Part"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-RNTarifmodul">
+		<xs:complexContent>
+			<xs:restriction base="XML-Tarifmodul">
+				<xs:sequence>
+					<xs:element name="version" type="XML-Version-Part"/>
+					<xs:element name="herausgeber" type="XML-Organisation-Part"/>
+					<xs:element name="fachablauf" type="XML-RNFachablauf-Part"/>
+					<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					<xs:element name="sprache-pool" type="XML-Sprache-Pool"/>
+					<xs:element name="eingangsschnittstelle-pool" type="XML-Eingangsschnittstelle-Pool"/>
+					<xs:element name="ausgangsschnittstelle-pool" type="XML-Ausgangsschnittstelle-Pool"/>
+					<xs:element name="ausgangskontext-pool" type="XML-Ausgangskontext-Pool"/>
+					<xs:element name="datentabelle-pool" type="XML-Datentabelle-Pool"/>
+					<xs:element name="schritt-pool" type="XML-Schritt-Pool"/>
+					<xs:element name="variable-pool" type="XML-Variable-Pool"/>
+					<xs:element name="funktion-pool" type="XML-Funktion-Pool"/>
+					<xs:element name="ausnahme-pool" type="XML-Ausnahme-Pool"/>
+					<xs:element name="auswahldaten-pool" type="XML-Auswahldaten-Pool"/>
+					<xs:element name="auswahloption-pool" type="XML-Auswahloption-Pool"/>
+					<xs:element name="ausgangsdaten-pool" type="XML-Ausgangsdaten-Pool"/>
+					<xs:element name="produktadapter-pool" type="XML-Produktadapter-Pool"/>
+					<xs:element name="identifikationsparameteradapter-pool" type="XML-Identifikationsparameteradapter-Pool"/>
+					<xs:element name="tarifpunktadapter-pool" type="XML-Tarifpunktadapter-Pool"/>
+					<xs:element name="tarifpunktreferenzadapter-pool" type="XML-Tarifpunktreferenzadapter-Pool"/>
+					<xs:element name="wegevariantenadapter-pool" type="XML-Wegevariantenadapter-Pool"/>
+					<xs:element name="linienadapter-pool" type="XML-Linienadapter-Pool"/>
+					<xs:element name="verkehrsmitteltypadapter-pool" type="XML-Verkehrsmitteltypadapter-Pool"/>
+					<xs:element name="bezahlartadapter-pool" type="XML-Bezahlartadapter-Pool"/>
+					<xs:element name="waehrungsadapter-pool" type="XML-Waehrungsadapter-Pool"/>
+					<xs:element name="zahlungsintervalladapter-pool" type="XML-Zahlungsintervalladapter-Pool"/>
+					<xs:element name="mitnahmetypadapter-pool" type="XML-Mitnahmetypadapter-Pool"/>
+					<xs:element name="rabattmedientypadapter-pool" type="XML-Rabattmedientypadapter-Pool"/>
+					<xs:element name="modulkontextadapter-pool" type="XML-Modulkontextadapter-Pool"/>
+					<xs:element name="nummerninterpretation-pool" type="XML-Nummerninterpretation-Pool"/>
+					<xs:element name="schluessel-pool" type="XML-Schluessel-Pool"/>
+					<xs:element name="tarifmodul-pool" type="XML-Tarifmodul-Pool"/>
+					<xs:element name="kommentar-pool" type="XML-Kommentar-Pool"/>
+					<xs:element name="signatur" type="XML-Signatur-Part"/>
+					<xs:element name="annotation" type="XML-Annotation-Part"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifmodul-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Item">
+				<xs:sequence>
+					<xs:element name="tarifmodul" type="XML-PVTarifmodul"/>
+					<xs:element name="preisanpassung-matrix" type="XML-Preisanpassung-Matrix"/>
+					<xs:element name="modulkontextadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="produkteingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="produktausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="tarifpunkteingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="tarifpunktausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="tarifpunktreferenzeingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="tarifpunktreferenzausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="linieneingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="linienausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="verkehrsmitteltypeingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="verkehrsmitteltypausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="wegevarianteneingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="wegevariantenausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="bezahlarteingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="bezahlartausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="waehrungseingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="waehrungsausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="zahlungsintervalleingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="zahlungsintervallausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="mitnahmetypeingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="mitnahmetypausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="rabattmedientypeingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="rabattmedientypausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+					<xs:element name="identifikationsparameterwerteingangsadapter-matrix" type="XML-Eingangsadapter-Matrix"/>
+					<xs:element name="identifikationsparameterwertausgangsadapter-matrix" type="XML-Ausgangsadapter-Matrix"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifmodul-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Tarifmodul-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Version-Part">
+		<xs:sequence>
+			<xs:element name="gueltigkeitsbeginn" type="XML-DatetimeValue"/>
+			<xs:element name="externNr" type="XML-IntegerValue"/>
+			<xs:element name="internNr" type="XML-IntegerValue"/>
+			<xs:element name="modulstatus" type="XML-IntegerValue"/>
+			<xs:element name="modulspezifikation" type="XML-StringValue"/>
+			<xs:element name="modulnamenszusatz" type="XML-StringValue"/>
+			<xs:element name="speicherzeitpunkt" type="XML-DatetimeValue"/>
+			<xs:element name="bearbeiter" type="XML-StringValue"/>
+			<xs:element name="freigeber" type="XML-StringValue"/>
+			<xs:element name="bemerkung" type="XML-StringValue"/>
+			<xs:element name="vorgaengerversion" type="XML-Version-Part" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Organisation-Part">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue"/>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Organisation-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Organisation-Part">
+				<xs:sequence>
+					<xs:element name="anforderung" type="XML-Ergaenzungsanforderung-Pool"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Organisation-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Organisation-Item" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Element}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Ergaenzungsanforderung-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Wochentag-Pool">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach Inhalt}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Referenzen-->
+	<xs:simpleType name="XML-Ref">
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="XML-Ref01">
+		<xs:sequence>
+			<xs:element name="ref" type="XML-Ref" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Ref11">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ref01">
+				<xs:sequence>
+					<xs:element name="ref" type="XML-Ref"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-RefSet0N">
+		<xs:complexContent>
+			<xs:restriction base="XML-RefList0N">
+				<xs:sequence>
+					<xs:element name="ref" type="XML-Ref" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach Inhalt}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-RefSet1N">
+		<xs:complexContent>
+			<xs:restriction base="XML-RefSet0N">
+				<xs:sequence>
+					<xs:element name="ref" type="XML-Ref" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach Inhalt}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-RefList0N">
+		<xs:sequence>
+			<xs:element name="ref" type="XML-Ref" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-RefList1N">
+		<xs:complexContent>
+			<xs:restriction base="XML-RefList0N">
+				<xs:sequence>
+					<xs:element name="ref" type="XML-Ref" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Grundwerte-->
+	<xs:complexType name="XML-VoidValue"/>
+	<xs:complexType name="XML-TrueValue"/>
+	<xs:complexType name="XML-FalseValue"/>
+	<xs:complexType name="XML-ArrayValue">
+		<xs:complexContent>
+			<xs:restriction base="XML-CommonFunction">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="bits" type="XML-BinaryValue"/>
+					<xs:element name="text" type="XML-StringValue"/>
+					<xs:element name="zahl" type="XML-IntegerValue"/>
+					<xs:element name="liste" type="XML-ArrayValue"/>
+					<xs:element name="datum" type="XML-DateValue"/>
+					<xs:element name="uhrzeit" type="XML-TimeValue"/>
+					<xs:element name="zeitpunkt" type="XML-DatetimeValue"/>
+					<xs:element name="zeitspanne" type="XML-DurationValue"/>
+					<xs:element name="ja" type="XML-TrueValue"/>
+					<xs:element name="nein" type="XML-FalseValue"/>
+					<xs:element name="ref" type="XML-ObjectValue"/>
+					<xs:element name="funktion" type="XML-FunctionValue"/>
+					<xs:element name="undefiniert" type="XML-VoidValue"/>
+				</xs:choice>
+				<xs:attribute name="ref" type="XML-Ref" use="prohibited"/>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-ObjectValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-Ref"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-FunctionValue">
+		<xs:complexContent>
+			<xs:restriction base="XML-CompositeFunction">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="bits" type="XML-BinaryValue"/>
+					<xs:element name="text" type="XML-StringValue"/>
+					<xs:element name="zahl" type="XML-IntegerValue"/>
+					<xs:element name="liste" type="XML-ArrayValue"/>
+					<xs:element name="datum" type="XML-DateValue"/>
+					<xs:element name="uhrzeit" type="XML-TimeValue"/>
+					<xs:element name="zeitpunkt" type="XML-DatetimeValue"/>
+					<xs:element name="zeitspanne" type="XML-DurationValue"/>
+					<xs:element name="ja" type="XML-TrueValue"/>
+					<xs:element name="nein" type="XML-FalseValue"/>
+					<xs:element name="ref" type="XML-ObjectValue"/>
+					<xs:element name="funktion" type="XML-FunctionValue"/>
+					<xs:element name="undefiniert" type="XML-VoidValue"/>
+					<xs:element name="param" type="XML-ParamFunction"/>
+					<xs:element name="aufruf" type="XML-CompositeFunction"/>
+				</xs:choice>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-DateValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-DateContent"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-TimeValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-TimeContent"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-DatetimeValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-DatetimeContent"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-DurationValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-DurationContent"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-BinaryValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-BinaryContent"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-StringValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-StringContent"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-IntegerValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-IntegerContent"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-BooleanValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-BooleanContent"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-ValueFunction">
+		<xs:complexContent>
+			<xs:restriction base="XML-ArrayValue">
+				<xs:choice>
+					<xs:element name="bits" type="XML-BinaryValue"/>
+					<xs:element name="text" type="XML-StringValue"/>
+					<xs:element name="zahl" type="XML-IntegerValue"/>
+					<xs:element name="liste" type="XML-ArrayValue"/>
+					<xs:element name="datum" type="XML-DateValue"/>
+					<xs:element name="uhrzeit" type="XML-TimeValue"/>
+					<xs:element name="zeitpunkt" type="XML-DatetimeValue"/>
+					<xs:element name="zeitspanne" type="XML-DurationValue"/>
+					<xs:element name="ja" type="XML-TrueValue"/>
+					<xs:element name="nein" type="XML-FalseValue"/>
+					<xs:element name="ref" type="XML-ObjectValue"/>
+					<xs:element name="funktion" type="XML-FunctionValue"/>
+					<xs:element name="undefiniert" type="XML-VoidValue"/>
+				</xs:choice>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-ParamFunction">
+		<xs:simpleContent>
+			<xs:extension base="xs:unsignedShort"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-CompositeFunction">
+		<xs:complexContent>
+			<xs:restriction base="XML-CommonFunction">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="bits" type="XML-BinaryValue"/>
+					<xs:element name="text" type="XML-StringValue"/>
+					<xs:element name="zahl" type="XML-IntegerValue"/>
+					<xs:element name="liste" type="XML-ArrayValue"/>
+					<xs:element name="datum" type="XML-DateValue"/>
+					<xs:element name="uhrzeit" type="XML-TimeValue"/>
+					<xs:element name="zeitpunkt" type="XML-DatetimeValue"/>
+					<xs:element name="zeitspanne" type="XML-DurationValue"/>
+					<xs:element name="ja" type="XML-TrueValue"/>
+					<xs:element name="nein" type="XML-FalseValue"/>
+					<xs:element name="ref" type="XML-ObjectValue"/>
+					<xs:element name="funktion" type="XML-FunctionValue"/>
+					<xs:element name="undefiniert" type="XML-VoidValue"/>
+					<xs:element name="param" type="XML-ParamFunction"/>
+					<xs:element name="aufruf" type="XML-CompositeFunction"/>
+				</xs:choice>
+				<xs:attribute name="ref" type="XML-Ref" use="required"/>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-CommonFunction">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="bits" type="XML-BinaryValue"/>
+			<xs:element name="text" type="XML-StringValue"/>
+			<xs:element name="zahl" type="XML-IntegerValue"/>
+			<xs:element name="liste" type="XML-ArrayValue"/>
+			<xs:element name="datum" type="XML-DateValue"/>
+			<xs:element name="uhrzeit" type="XML-TimeValue"/>
+			<xs:element name="zeitpunkt" type="XML-DatetimeValue"/>
+			<xs:element name="zeitspanne" type="XML-DurationValue"/>
+			<xs:element name="ja" type="XML-TrueValue"/>
+			<xs:element name="nein" type="XML-FalseValue"/>
+			<xs:element name="ref" type="XML-ObjectValue"/>
+			<xs:element name="funktion" type="XML-FunctionValue"/>
+			<xs:element name="undefiniert" type="XML-VoidValue"/>
+			<xs:element name="param" type="XML-ParamFunction"/>
+			<xs:element name="aufruf" type="XML-CompositeFunction"/>
+		</xs:choice>
+		<xs:attribute name="ref" type="XML-Ref" use="optional"/>
+	</xs:complexType>
+	<xs:simpleType name="XML-DateContent">
+		<xs:restriction base="xs:date">
+			<xs:pattern value="[^Z:]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="XML-TimeContent">
+		<xs:restriction base="xs:time">
+			<xs:pattern value="[^\.]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="XML-DatetimeContent">
+		<xs:restriction base="xs:dateTime">
+			<xs:pattern value="[^\.]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="XML-DurationContent">
+		<xs:restriction base="xs:duration">
+			<xs:pattern value="[^\.]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="XML-BinaryContent">
+		<xs:restriction base="xs:hexBinary"/>
+	</xs:simpleType>
+	<xs:simpleType name="XML-StringContent">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="XML-IntegerContent">
+		<xs:restriction base="xs:long"/>
+	</xs:simpleType>
+	<xs:simpleType name="XML-IntegerArrayContent">
+		<xs:list itemType="XML-IntegerContent"/>
+	</xs:simpleType>
+	<xs:simpleType name="XML-BooleanContent">
+		<xs:restriction base="xs:boolean">
+			<xs:pattern value="[^01]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="XML-PolygonContent">
+		<xs:restriction base="XML-IntegerArrayContent">
+			<xs:pattern value="((\d+\s+\d+\s+)*(\d+\s+\d+))?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--Datenelemente-->
+	<xs:complexType name="XML-Pool">
+		<xs:attribute name="key" type="XML-Ref" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Item"/>
+	<xs:complexType name="XML-Name-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Name-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Name-Item">
+		<xs:sequence>
+			<xs:element name="name" type="XML-StringValue"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-NrName-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-NrName-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-NrName-Item">
+		<xs:sequence>
+			<xs:element name="nr" type="XML-IntegerValue"/>
+			<xs:element name="name" type="XML-StringValue"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-NameGruppe-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-NameGruppe-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-NameGruppe-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="element" type="XML-RefSet0N"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Ausgangstexte-->
+	<xs:complexType name="XML-Ausgangstext-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Ausgangstext-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangstext-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangstext-Matrix">
+		<xs:sequence>
+			<xs:element name="text" type="XML-Ausgangstext-Entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangstext-Entry">
+		<xs:complexContent>
+			<xs:extension base="XML-StringValue">
+				<xs:attribute name="ref" type="XML-Ref" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Ausgangssequenzen-->
+	<xs:complexType name="XML-Ausgangssequenz-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Ausgangssequenz-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangssequenz-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="sequenz-matrix" type="XML-Ausgangssequenz-Matrix"/>
+					<xs:element name="defaultoption" type="XML-Ref01" minOccurs="0"/>
+					<xs:element name="auswahloption" type="XML-RefList1N" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangssequenz-Matrix">
+		<xs:sequence>
+			<xs:element name="sequenz" type="XML-Ausgangssequenz-Entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangssequenz-Entry">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="ref" type="XML-Ref"/>
+			<xs:element name="text" type="XML-StringValue"/>
+		</xs:choice>
+		<xs:attribute name="ref" type="XML-Ref" use="required"/>
+	</xs:complexType>
+	<!--Fachabläufe-->
+	<xs:complexType name="XML-RNFachablauf-Part">
+		<xs:complexContent>
+			<xs:restriction base="XML-Fachablauf-Part">
+				<xs:sequence>
+					<xs:element name="produktermittlungsstart" type="XML-Ref11"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-PVFachablauf-Part">
+		<xs:complexContent>
+			<xs:restriction base="XML-Fachablauf-Part">
+				<xs:sequence>
+					<xs:element name="kontrollstart" type="XML-Ref11"/>
+					<xs:element name="erfassungsstart" type="XML-Ref11"/>
+					<xs:element name="anpassungsstart" type="XML-Ref11"/>
+					<xs:element name="darstellungsstart" type="XML-Ref11"/>
+					<xs:element name="produktermittlungsstart" type="XML-Ref11"/>
+					<xs:element name="transaktionsauswertungsstart" type="XML-Ref11"/>
+					<xs:element name="pruefungin" type="XML-Ref01"/>
+					<xs:element name="pruefungvor" type="XML-DurationValue"/>
+					<xs:element name="pruefungnach" type="XML-DurationValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Fachablauf-Part">
+		<xs:sequence>
+			<xs:element name="kontrollstart" type="XML-Ref11" minOccurs="0"/>
+			<xs:element name="erfassungsstart" type="XML-Ref11" minOccurs="0"/>
+			<xs:element name="anpassungsstart" type="XML-Ref11" minOccurs="0"/>
+			<xs:element name="darstellungsstart" type="XML-Ref11" minOccurs="0"/>
+			<xs:element name="produktermittlungsstart" type="XML-Ref11"/>
+			<xs:element name="transaktionsauswertungsstart" type="XML-Ref11" minOccurs="0"/>
+			<xs:element name="pruefungin" type="XML-Ref01" minOccurs="0"/>
+			<xs:element name="pruefungvor" type="XML-DurationValue" minOccurs="0"/>
+			<xs:element name="pruefungnach" type="XML-DurationValue" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Schnittstellen-->
+	<xs:complexType name="XML-Eingangsschnittstelle-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Eingangsschnittstelle-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Eingangsschnittstelle-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="parameter-pool" type="XML-Eingangsparameter-Pool"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Eingangsparameter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Eingangsparameter-Item" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Eingangsparameter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue"/>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsschnittstelle-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Eingangsschnittstelle-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Ausgangsschnittstelle-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsschnittstelle-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Eingangsschnittstelle-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="parameter-pool" type="XML-Ausgangsparameter-Pool"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsparameter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Eingangsparameter-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Ausgangsparameter-Item" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsparameter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Eingangsparameter-Item">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue"/>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangskontext-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="sprache" type="XML-RefSet1N"/>
+					<xs:element name="parameter" type="XML-RefSet1N"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangskontext-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Ausgangskontext-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Sprache-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue"/>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Sprache-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Sprache-Item" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Strategien-->
+	<xs:complexType name="XML-Schritt-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Schritt-Item" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Schritt-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:choice>
+					<xs:element name="ausgang" type="XML-Ausgangsschritt-Part"/>
+					<xs:element name="auswahl" type="XML-Auswahlschritt-Part"/>
+					<xs:element name="berechnung" type="XML-Berechnungsschritt-Part"/>
+					<xs:element name="entscheidung" type="XML-Entscheidungsschritt-Part"/>
+					<xs:element name="parallelisierung" type="XML-Parallelisierungsschritt-Part"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Auswahlschritt-Part">
+		<xs:sequence>
+			<xs:element name="auswahldaten" type="XML-Ref11"/>
+			<xs:element name="ausnahme" type="XML-Ref01"/>
+			<xs:element name="nachfolger" type="XML-RefList1N"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsschritt-Part">
+		<xs:sequence>
+			<xs:element name="ausgangsdaten" type="XML-Ref11"/>
+			<xs:element name="ausnahme" type="XML-Ref01"/>
+			<xs:element name="nachfolger" type="XML-Ref01"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Berechnungsschritt-Part">
+		<xs:sequence>
+			<xs:element name="funktion" type="XML-Ref11"/>
+			<xs:element name="ausnahme" type="XML-Ref01"/>
+			<xs:element name="nachfolger" type="XML-Ref01"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Entscheidungsschritt-Part">
+		<xs:sequence>
+			<xs:element name="funktion" type="XML-Ref11"/>
+			<xs:element name="ausnahme" type="XML-Ref01"/>
+			<xs:element name="janachfolger" type="XML-Ref11"/>
+			<xs:element name="neinnachfolger" type="XML-Ref11"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Parallelisierungsschritt-Part">
+		<xs:sequence>
+			<xs:element name="parallel" type="XML-RefList0N"/>
+			<xs:element name="nachfolger" type="XML-Ref01"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Variable-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Name-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Variable-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Variable-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Funktion-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Funktion-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Funktion-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:choice>
+					<xs:element name="nr" type="XML-IntegerValue"/>
+					<xs:element name="wert" type="XML-ValueFunction"/>
+					<xs:element name="aufruf" type="XML-CompositeFunction"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausnahme-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Ausnahme-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausnahme-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue"/>
+					<xs:element name="name" type="XML-StringValue"/>
+					<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Auswahldaten-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangssequenz-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Auswahldaten-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Auswahldaten-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangssequenz-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="sequenz-matrix" type="XML-Ausgangssequenz-Matrix"/>
+						<xs:element name="defaultoption" type="XML-Ref01"/>
+						<xs:element name="auswahloption" type="XML-RefList1N"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Auswahloption-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangsdaten-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Auswahloption-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Auswahloption-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangsdaten-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="sequenz-matrix" type="XML-Ausgangssequenz-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsdaten-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangssequenz-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Ausgangsdaten-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsdaten-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangssequenz-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="sequenz-matrix" type="XML-Ausgangssequenz-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Datentabelle-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Datentabelle-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Datentabelle-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="datensatzkey" type="XML-ArrayValue"/>
+					<xs:element name="datensatzvalue" type="XML-ArrayValue"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Produktdaten-->
+	<xs:complexType name="XML-EFMProdukt-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Eigenprodukt-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-EFMProdukt-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-EFMProdukt-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Eigenprodukt-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="rueckzahlungsdaten-table" type="XML-Rueckzahlungsdaten-Table"/>
+						<xs:element name="rueckzahlungsausnahme-table" type="XML-Rueckzahlungsausnahme-Table"/>
+						<xs:element name="ungueltigkeitszeitpunktsdaten-table" type="XML-Ungueltigkeitszeitpunktsdaten-Table"/>
+						<xs:element name="ungueltigkeitszeitpunktsausnahme-table" type="XML-Ungueltigkeitszeitpunktsausnahme-Table"/>
+						<xs:element name="schluessel" type="XML-PVSchluessel-Part"/>
+						<xs:element name="kontrolle" type="XML-Produktdaten-Part" minOccurs="0"/>
+						<xs:element name="erfassung" type="XML-Produktdaten-Part" minOccurs="0"/>
+						<xs:element name="anpassung" type="XML-Produktdaten-Part" minOccurs="0"/>
+						<xs:element name="darstellung" type="XML-Produktdaten-Part" minOccurs="0"/>
+						<xs:element name="produktermittlung" type="XML-Produktdaten-Part" minOccurs="0"/>
+						<xs:element name="transaktionsauswertung" type="XML-Produktdaten-Part" minOccurs="0"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifprodukt-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Eigenprodukt-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Tarifprodukt-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifprodukt-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Eigenprodukt-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="rueckzahlungsdaten-table" type="XML-Rueckzahlungsdaten-Table"/>
+						<xs:element name="rueckzahlungsausnahme-table" type="XML-Rueckzahlungsausnahme-Table"/>
+						<xs:element name="ungueltigkeitszeitpunktsdaten-table" type="XML-Ungueltigkeitszeitpunktsdaten-Table"/>
+						<xs:element name="ungueltigkeitszeitpunktsausnahme-table" type="XML-Ungueltigkeitszeitpunktsausnahme-Table"/>
+						<xs:element name="preisdaten-table" type="XML-Preisdaten-Table"/>
+						<xs:element name="preisausnahme-table" type="XML-Preisausnahme-Table"/>
+						<xs:element name="gueltigkeitszeitrahmensdaten-table" type="XML-Gueltigkeitszeitrahmensdaten-Table"/>
+						<xs:element name="gueltigkeitszeitrahmensausnahme-table" type="XML-Gueltigkeitszeitrahmensausnahme-Table"/>
+						<xs:element name="nachfolgedaten-table" type="XML-Nachfolgedaten-Table"/>
+						<xs:element name="nachfolgeausnahme-table" type="XML-Nachfolgeausnahme-Table"/>
+						<xs:element name="efmprodukt" type="XML-Ref01"/>
+						<xs:element name="identifikation" type="XML-RefSet0N"/>
+						<xs:element name="kontingentierung" type="XML-Ref01"/>
+						<xs:element name="preisanpassung" type="XML-BooleanValue"/>
+						<xs:element name="extNr" type="XML-StringValue"/>
+						<xs:element name="kontrolle" type="XML-Produktdaten-Part" minOccurs="0"/>
+						<xs:element name="erfassung" type="XML-Produktdaten-Part" minOccurs="0"/>
+						<xs:element name="anpassung" type="XML-Produktdaten-Part" minOccurs="0"/>
+						<xs:element name="darstellung" type="XML-Produktdaten-Part" minOccurs="0"/>
+						<xs:element name="produktermittlung" type="XML-Produktdaten-Part" minOccurs="0"/>
+						<xs:element name="transaktionsauswertung" type="XML-Produktdaten-Part" minOccurs="0"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Eigenprodukt-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Eigenprodukt-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Eigenprodukt-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:element name="rueckzahlungsdaten-table" type="XML-Rueckzahlungsdaten-Table"/>
+					<xs:element name="rueckzahlungsausnahme-table" type="XML-Rueckzahlungsausnahme-Table"/>
+					<xs:element name="ungueltigkeitszeitpunktsdaten-table" type="XML-Ungueltigkeitszeitpunktsdaten-Table"/>
+					<xs:element name="ungueltigkeitszeitpunktsausnahme-table" type="XML-Ungueltigkeitszeitpunktsausnahme-Table"/>
+					<xs:element name="preisdaten-table" type="XML-Preisdaten-Table" minOccurs="0"/>
+					<xs:element name="preisausnahme-table" type="XML-Preisausnahme-Table" minOccurs="0"/>
+					<xs:element name="gueltigkeitszeitrahmensdaten-table" type="XML-Gueltigkeitszeitrahmensdaten-Table" minOccurs="0"/>
+					<xs:element name="gueltigkeitszeitrahmensausnahme-table" type="XML-Gueltigkeitszeitrahmensausnahme-Table" minOccurs="0"/>
+					<xs:element name="nachfolgedaten-table" type="XML-Nachfolgedaten-Table" minOccurs="0"/>
+					<xs:element name="nachfolgeausnahme-table" type="XML-Nachfolgeausnahme-Table" minOccurs="0"/>
+					<xs:element name="efmprodukt" type="XML-Ref01" minOccurs="0"/>
+					<xs:element name="identifikation" type="XML-RefSet0N" minOccurs="0"/>
+					<xs:element name="kontingentierung" type="XML-Ref01" minOccurs="0"/>
+					<xs:element name="preisanpassung" type="XML-BooleanValue" minOccurs="0"/>
+					<xs:element name="extNr" type="XML-StringValue" minOccurs="0"/>
+					<xs:element name="schluessel" type="XML-PVSchluessel-Part" minOccurs="0"/>
+					<xs:element name="kontrolle" type="XML-Produktdaten-Part" minOccurs="0"/>
+					<xs:element name="erfassung" type="XML-Produktdaten-Part" minOccurs="0"/>
+					<xs:element name="anpassung" type="XML-Produktdaten-Part" minOccurs="0"/>
+					<xs:element name="darstellung" type="XML-Produktdaten-Part" minOccurs="0"/>
+					<xs:element name="produktermittlung" type="XML-Produktdaten-Part" minOccurs="0"/>
+					<xs:element name="transaktionsauswertung" type="XML-Produktdaten-Part" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Fremdprodukt-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Fremdprodukt-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Fremdprodukt-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:element name="tarifstand" type="XML-StringValue"/>
+					<xs:element name="pv" type="XML-Organisation-Part"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Produktgruppe-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-NameGruppe-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Produktgruppe-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="element" type="XML-RefSet0N"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Identifikationsparameter-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Identifikationsparameter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Identifikationsparameter-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="wert-pool" type="XML-Identifikationsparameterwert-Pool"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Identifikationsparameterwert-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Identifikationsparameterwert-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Identifikationsparameterwert-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Produktdaten-Part">
+		<xs:sequence>
+			<xs:element name="funktion" type="XML-Ref01"/>
+			<xs:element name="modulkontext" type="XML-RefSet0N"/>
+			<xs:element name="unterstuetztab" type="XML-DateValue"/>
+			<xs:element name="ausgangsdaten-matrix" type="XML-Ausgangsdaten-Matrix"/>
+			<xs:element name="abhaengigkeitsdaten-table" type="XML-Abhaengigkeitsdaten-Table"/>
+			<xs:element name="abhaengigkeitsausnahme-table" type="XML-Abhaengigkeitsausnahme-Table"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsdaten-Entry">
+		<xs:simpleContent>
+			<xs:extension base="XML-Ref">
+				<xs:attribute name="ref" type="XML-Ref" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsdaten-Matrix">
+		<xs:sequence>
+			<xs:element name="ausgangsdaten" type="XML-Ausgangsdaten-Entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsdatenfamilie-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Name-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Ausgangsdatenfamilie-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsdatenfamilie-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Produktnachfolgen-->
+	<xs:complexType name="XML-Nachfolgedaten-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Nachfolge-Table">
+				<xs:sequence>
+					<xs:element name="kriterium" type="XML-RefList0N"/>
+					<xs:element name="vorgaenger" type="XML-RefList0N"/>
+					<xs:element name="nachfolger" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Nachfolgeausnahme-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Nachfolge-Table">
+				<xs:sequence>
+					<xs:element name="kriterium" type="XML-RefList0N"/>
+					<xs:element name="vorgaenger" type="XML-RefList0N"/>
+					<xs:element name="ausnahme" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Nachfolge-Table">
+		<xs:sequence>
+			<xs:element name="kriterium" type="XML-RefList0N"/>
+			<xs:element name="vorgaenger" type="XML-RefList0N"/>
+			<xs:element name="nachfolger" type="XML-RefList0N" minOccurs="0"/>
+			<xs:element name="ausnahme" type="XML-RefList0N" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Nachfolgekriterium-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Nachfolgekriterium-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Nachfolgekriterium-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="funktion" type="XML-Ref01"/>
+					<xs:element name="vorgaenger" type="XML-Kriterienzeitraum-Part"/>
+					<xs:element name="wirksamkeit" type="XML-Kriterienzeitraum-Part"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Kriterienzeitraum-Part">
+		<xs:sequence>
+			<xs:element name="beginn" type="XML-DatetimeValue"/>
+			<xs:element name="ende" type="XML-DatetimeValue"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Produktabhängigkeiten-->
+	<xs:complexType name="XML-Abhaengigkeitskriterium-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="funktion" type="XML-Ref01"/>
+					<xs:element name="wirksamkeit" type="XML-Kriterienzeitraum-Part"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Abhaengigkeitskriterium-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Abhaengigkeitskriterium-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Abhaengigkeit-Table">
+		<xs:sequence>
+			<xs:element name="kriterium" type="XML-RefList0N"/>
+			<xs:element name="vorausgesetzt" type="XML-RefList0N"/>
+			<xs:element name="ausnahme" type="XML-RefList0N" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Abhaengigkeitsdaten-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Abhaengigkeit-Table">
+				<xs:sequence>
+					<xs:element name="kriterium" type="XML-RefList0N"/>
+					<xs:element name="vorausgesetzt" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Abhaengigkeitsausnahme-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Abhaengigkeit-Table">
+				<xs:sequence>
+					<xs:element name="kriterium" type="XML-RefList0N"/>
+					<xs:element name="vorausgesetzt" type="XML-RefList0N"/>
+					<xs:element name="ausnahme" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Währungen-->
+	<xs:complexType name="XML-Waehrung-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Waehrung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Waehrung-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Preisdaten-->
+	<xs:complexType name="XML-Preisdaten-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Preis-Table">
+				<xs:sequence>
+					<xs:element name="waehrung" type="XML-RefList0N"/>
+					<xs:element name="bezahlartbedingung" type="XML-RefList0N"/>
+					<xs:element name="zahlungsintervallbedingung" type="XML-RefList0N"/>
+					<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="tageszeitbedingung" type="XML-RefList0N"/>
+					<xs:element name="zeitraumbedingung" type="XML-RefList0N"/>
+					<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="bewertungsbedingung" type="XML-RefList0N"/>
+					<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="mitnahmebedingung" type="XML-RefList0N"/>
+					<xs:element name="rabattmedienbedingung" type="XML-RefList0N"/>
+					<xs:element name="modulkontextbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="daten-pool" type="XML-Preisdaten-Pool"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Preisausnahme-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Preis-Table">
+				<xs:sequence>
+					<xs:element name="waehrung" type="XML-RefList0N"/>
+					<xs:element name="bezahlartbedingung" type="XML-RefList0N"/>
+					<xs:element name="zahlungsintervallbedingung" type="XML-RefList0N"/>
+					<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="tageszeitbedingung" type="XML-RefList0N"/>
+					<xs:element name="zeitraumbedingung" type="XML-RefList0N"/>
+					<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="bewertungsbedingung" type="XML-RefList0N"/>
+					<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="mitnahmebedingung" type="XML-RefList0N"/>
+					<xs:element name="rabattmedienbedingung" type="XML-RefList0N"/>
+					<xs:element name="modulkontextbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="ausnahme" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Preis-Table">
+		<xs:sequence>
+			<xs:element name="waehrung" type="XML-RefList0N"/>
+			<xs:element name="bezahlartbedingung" type="XML-RefList0N"/>
+			<xs:element name="zahlungsintervallbedingung" type="XML-RefList0N"/>
+			<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+			<xs:element name="tageszeitbedingung" type="XML-RefList0N"/>
+			<xs:element name="zeitraumbedingung" type="XML-RefList0N"/>
+			<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+			<xs:element name="bewertungsbedingung" type="XML-RefList0N"/>
+			<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+			<xs:element name="mitnahmebedingung" type="XML-RefList0N"/>
+			<xs:element name="rabattmedienbedingung" type="XML-RefList0N"/>
+			<xs:element name="modulkontextbedingung" type="XML-RefList0N"/>
+			<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+			<xs:element name="daten-pool" type="XML-Preisdaten-Pool" minOccurs="0"/>
+			<xs:element name="ausnahme" type="XML-RefList0N" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Preisdaten-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Preisdaten-Item" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Preisdaten-Item">
+		<xs:sequence>
+			<xs:element name="wert" type="XML-IntegerValue"/>
+			<xs:element name="mwstsatz" type="XML-IntegerValue" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Rückzahlungsdaten-->
+	<xs:complexType name="XML-Rueckzahlungsdaten-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Rueckzahlung-Table">
+				<xs:sequence>
+					<xs:element name="waehrung" type="XML-RefList0N"/>
+					<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="zeitraumbedingung" type="XML-RefList0N"/>
+					<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="bewertungsbedingung" type="XML-RefList0N"/>
+					<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="mitnahmebedingung" type="XML-RefList0N"/>
+					<xs:element name="rabattmedienbedingung" type="XML-RefList0N"/>
+					<xs:element name="modulkontextbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="daten-pool" type="XML-Rueckzahlungsdaten-Pool"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Rueckzahlungsausnahme-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Rueckzahlung-Table">
+				<xs:sequence>
+					<xs:element name="waehrung" type="XML-RefList0N"/>
+					<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="zeitraumbedingung" type="XML-RefList0N"/>
+					<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="bewertungsbedingung" type="XML-RefList0N"/>
+					<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="mitnahmebedingung" type="XML-RefList0N"/>
+					<xs:element name="rabattmedienbedingung" type="XML-RefList0N"/>
+					<xs:element name="modulkontextbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="ausnahme" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Rueckzahlung-Table">
+		<xs:sequence>
+			<xs:element name="waehrung" type="XML-RefList0N"/>
+			<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+			<xs:element name="zeitraumbedingung" type="XML-RefList0N"/>
+			<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+			<xs:element name="bewertungsbedingung" type="XML-RefList0N"/>
+			<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+			<xs:element name="mitnahmebedingung" type="XML-RefList0N"/>
+			<xs:element name="rabattmedienbedingung" type="XML-RefList0N"/>
+			<xs:element name="modulkontextbedingung" type="XML-RefList0N"/>
+			<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+			<xs:element name="daten-pool" type="XML-Rueckzahlungsdaten-Pool" minOccurs="0"/>
+			<xs:element name="ausnahme" type="XML-RefList0N" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Rueckzahlungsdaten-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Rueckzahlungsdaten-Item" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Rueckzahlungsdaten-Item">
+		<xs:sequence>
+			<xs:element name="betrag" type="XML-Preisdaten-Item"/>
+			<xs:element name="gebuehr" type="XML-Preisdaten-Item"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Ungültigkeitszeitpunktsdaten-->
+	<xs:complexType name="XML-Ungueltigkeitszeitpunktsdaten-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ungueltigkeitszeitpunkt-Table">
+				<xs:sequence>
+					<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="zeitraumbedingung" type="XML-RefList0N"/>
+					<xs:element name="modulkontextbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="daten-pool" type="XML-Ungueltigkeitszeitpunktsdaten-Pool"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ungueltigkeitszeitpunktsausnahme-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ungueltigkeitszeitpunkt-Table">
+				<xs:sequence>
+					<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="zeitraumbedingung" type="XML-RefList0N"/>
+					<xs:element name="modulkontextbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="ausnahme" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ungueltigkeitszeitpunkt-Table">
+		<xs:sequence>
+			<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+			<xs:element name="zeitraumbedingung" type="XML-RefList0N"/>
+			<xs:element name="modulkontextbedingung" type="XML-RefList0N"/>
+			<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+			<xs:element name="daten-pool" type="XML-Ungueltigkeitszeitpunktsdaten-Pool" minOccurs="0"/>
+			<xs:element name="ausnahme" type="XML-RefList0N" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Ungueltigkeitszeitpunktsdaten-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Ungueltigkeitszeitpunktsdaten-Item" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Ungueltigkeitszeitpunktsdaten-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Zeitraumsgrenze-Part">
+				<xs:sequence>
+					<xs:element name="zeitspanne" type="XML-DurationValue"/>
+					<xs:sequence>
+						<xs:element name="uhrzeit" type="XML-TimeValue"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Gültigkeitszeitrahmensdaten-->
+	<xs:complexType name="XML-Gueltigkeitszeitrahmensdaten-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Gueltigkeitszeitrahmen-Table">
+				<xs:sequence>
+					<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="tageszeitbedingung" type="XML-RefList0N"/>
+					<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="bewertungsbedingung" type="XML-RefList0N"/>
+					<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="daten-pool" type="XML-Gueltigkeitszeitrahmensdaten-Pool"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Gueltigkeitszeitrahmensausnahme-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Gueltigkeitszeitrahmen-Table">
+				<xs:sequence>
+					<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="tageszeitbedingung" type="XML-RefList0N"/>
+					<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="bewertungsbedingung" type="XML-RefList0N"/>
+					<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="ausnahme" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Gueltigkeitszeitrahmen-Table">
+		<xs:sequence>
+			<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+			<xs:element name="tageszeitbedingung" type="XML-RefList0N"/>
+			<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+			<xs:element name="bewertungsbedingung" type="XML-RefList0N"/>
+			<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+			<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+			<xs:element name="daten-pool" type="XML-Gueltigkeitszeitrahmensdaten-Pool" minOccurs="0"/>
+			<xs:element name="ausnahme" type="XML-RefList0N" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Gueltigkeitszeitrahmensdaten-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Gueltigkeitszeitrahmensdaten-Item" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Gueltigkeitszeitrahmensdaten-Item">
+		<xs:sequence>
+			<xs:element name="beginn" type="XML-Zeitrahmensgrenze-Part"/>
+			<xs:element name="ende" type="XML-Zeitrahmensgrenze-Part"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Zeitrahmensgrenze-Part">
+		<xs:sequence>
+			<xs:element name="zeitspanne" type="XML-DurationValue"/>
+			<xs:choice minOccurs="0">
+				<xs:element name="uhrzeit" type="XML-TimeValue"/>
+				<xs:element name="unbestimmt" type="XML-VoidValue"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Kontingentierungen-->
+	<xs:complexType name="XML-Kontingentierung-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Kontingentierung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Kontingentierung-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="kontingentdaten-table" type="XML-Kontingentdaten-Table"/>
+					<xs:element name="kontingentausnahme-table" type="XML-Kontingentausnahme-Table"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Kontingentdaten-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Kontingent-Table">
+				<xs:sequence>
+					<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="daten-pool" type="XML-Kontingentdaten-Pool"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Kontingentausnahme-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Kontingent-Table">
+				<xs:sequence>
+					<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="ausnahme" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Kontingent-Table">
+		<xs:sequence>
+			<xs:element name="tagesbedingung" type="XML-RefList0N"/>
+			<xs:element name="tarifpunktbedingung" type="XML-RefList0N"/>
+			<xs:element name="verkehrsmittellinienbedingung" type="XML-RefList0N"/>
+			<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+			<xs:element name="daten-pool" type="XML-Kontingentdaten-Pool" minOccurs="0"/>
+			<xs:element name="ausnahme" type="XML-RefList0N" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Kontingentdaten-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Kontingentdaten-Item" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Kontingentdaten-Item">
+		<xs:sequence>
+			<xs:element name="url" type="XML-StringValue"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Raumdaten-->
+	<xs:complexType name="XML-Tarifpunkt-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Flaechenelement-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Tarifpunkt-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunkt-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Flaechenelement-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="geobezug" type="XML-Geobezug-Part"/>
+						<xs:element name="typ" type="XML-StringValue"/>
+						<xs:element name="ortsbezug" type="XML-StringValue"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktgruppe-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Tarifpunktgruppe-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktgruppe-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="element" type="XML-RefSet0N"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktreferenz-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Flaechenelement-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Tarifpunktreferenz-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktreferenz-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Flaechenelement-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="geobezug" type="XML-Geobezug-Part"/>
+						<xs:element name="typ" type="XML-StringValue"/>
+						<xs:element name="ortsbezug" type="XML-StringValue"/>
+						<xs:element name="tarifpunkt" type="XML-RefSet1N"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Wegevariante-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Flaechenelement-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Wegevariante-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Wegevariante-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Flaechenelement-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="geobezug" type="XML-Geobezug-Part"/>
+						<xs:element name="tarifpunktfolge-pool" type="XML-Tarifpunktfolge-Pool"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktfolge-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Tarifpunktfolge-Item" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktfolge-Item">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="ink" type="XML-TarifpunktfolgeninklusionValue"/>
+			<xs:element name="exk" type="XML-TarifpunktfolgenexklusionValue"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="XML-TarifpunktfolgeninklusionValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-Ref"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-TarifpunktfolgenexklusionValue">
+		<xs:simpleContent>
+			<xs:extension base="XML-Ref"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Flaechenelement-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Flaechenelement-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Flaechenelement-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:element name="geobezug" type="XML-Geobezug-Part"/>
+					<xs:element name="typ" type="XML-StringValue" minOccurs="0"/>
+					<xs:element name="ortsbezug" type="XML-StringValue" minOccurs="0"/>
+					<xs:element name="tarifpunkt" type="XML-RefSet1N" minOccurs="0"/>
+					<xs:element name="tarifpunktfolge-pool" type="XML-Tarifpunktfolge-Pool" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Geobezug-Part">
+		<xs:simpleContent>
+			<xs:extension base="XML-PolygonContent"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!--Raumzuordnungen-->
+	<xs:complexType name="XML-Zuordnungstyp-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Name-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Zuordnungstyp-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungstyp-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsdaten-Matrix">
+		<xs:complexContent>
+			<xs:restriction base="XML-Zuordnung-Matrix">
+				<xs:sequence>
+					<xs:element name="typ" type="XML-Zuordnungsdatentyp-Entry" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsdatentyp-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Zuordnungstyp-Entry">
+				<xs:sequence>
+					<xs:element name="bezug" type="XML-Zuordnungsdatenbezug-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsdatenbezug-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Zuordnungsbezug-Entry">
+				<xs:sequence>
+					<xs:element name="von" type="XML-Zuordnungsdatenvon-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsdatenvon-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Zuordnungsvon-Entry">
+				<xs:sequence>
+					<xs:element name="zu" type="XML-Zuordnungsdatenzu-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach Inhalt}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsdatenzu-Entry">
+		<xs:simpleContent>
+			<xs:restriction base="XML-Zuordnungszu-Entry">
+				<xs:attribute name="ref" type="XML-Ref" use="prohibited"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsausnahme-Matrix">
+		<xs:complexContent>
+			<xs:restriction base="XML-Zuordnung-Matrix">
+				<xs:sequence>
+					<xs:element name="typ" type="XML-Zuordnungsausnahmetyp-Entry" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsausnahmetyp-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Zuordnungstyp-Entry">
+				<xs:sequence>
+					<xs:element name="bezug" type="XML-Zuordnungsausnahmebezug-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsausnahmebezug-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Zuordnungsbezug-Entry">
+				<xs:sequence>
+					<xs:element name="von" type="XML-Zuordnungsausnahmevon-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsausnahmevon-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Zuordnungsvon-Entry">
+				<xs:sequence>
+					<xs:element name="zu" type="XML-Zuordnungsausnahmezu-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsausnahmezu-Entry">
+		<xs:simpleContent>
+			<xs:restriction base="XML-Zuordnungszu-Entry">
+				<xs:attribute name="ref" type="XML-Ref" use="required"/>
+			</xs:restriction>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnung-Matrix">
+		<xs:sequence>
+			<xs:element name="typ" type="XML-Zuordnungstyp-Entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungstyp-Entry">
+		<xs:sequence>
+			<xs:element name="bezug" type="XML-Zuordnungsbezug-Entry" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="ref" type="XML-Ref" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsbezug-Entry">
+		<xs:sequence>
+			<xs:element name="von" type="XML-Zuordnungsvon-Entry" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="ref" type="XML-Ref" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungsvon-Entry">
+		<xs:sequence>
+			<xs:element name="zu" type="XML-Zuordnungszu-Entry" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="ref" type="XML-Ref" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Zuordnungszu-Entry">
+		<xs:simpleContent>
+			<xs:extension base="XML-Ref">
+				<xs:attribute name="ref" type="XML-Ref"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!--Raumbewertungen-->
+	<xs:complexType name="XML-Bewertungstyp-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Name-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Bewertungstyp-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungstyp-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsdaten-Matrix">
+		<xs:complexContent>
+			<xs:restriction base="XML-Bewertung-Matrix">
+				<xs:sequence>
+					<xs:element name="typ" type="XML-Bewertungsdatentyp-Entry" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsdatentyp-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Bewertungstyp-Entry">
+				<xs:sequence>
+					<xs:element name="bezug" type="XML-Bewertungsdatenbezug-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsdatenbezug-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Bewertungsbezug-Entry">
+				<xs:sequence>
+					<xs:element name="von" type="XML-Bewertungsdatenvon-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsdatenvon-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Bewertungsvon-Entry">
+				<xs:sequence>
+					<xs:element name="nach" type="XML-Bewertungsdatennach-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsdatennach-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Bewertungsnach-Entry">
+				<xs:sequence>
+					<xs:element name="ueber" type="XML-Bewertungsdatenueber-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsdatenueber-Entry">
+		<xs:simpleContent>
+			<xs:restriction base="XML-Bewertungsueber-Entry"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsausnahme-Matrix">
+		<xs:complexContent>
+			<xs:restriction base="XML-Bewertung-Matrix">
+				<xs:sequence>
+					<xs:element name="typ" type="XML-Bewertungsausnahmetyp-Entry" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsausnahmetyp-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Bewertungstyp-Entry">
+				<xs:sequence>
+					<xs:element name="bezug" type="XML-Bewertungsausnahmebezug-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsausnahmebezug-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Bewertungsbezug-Entry">
+				<xs:sequence>
+					<xs:element name="von" type="XML-Bewertungsausnahmevon-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsausnahmevon-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Bewertungsvon-Entry">
+				<xs:sequence>
+					<xs:element name="nach" type="XML-Bewertungsausnahmenach-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsausnahmenach-Entry">
+		<xs:complexContent>
+			<xs:restriction base="XML-Bewertungsnach-Entry">
+				<xs:sequence>
+					<xs:element name="ueber" type="XML-Bewertungsausnahmeueber-Entry" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsausnahmeueber-Entry">
+		<xs:simpleContent>
+			<xs:restriction base="XML-Bewertungsueber-Entry"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertung-Matrix">
+		<xs:sequence>
+			<xs:element name="typ" type="XML-Bewertungstyp-Entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungstyp-Entry">
+		<xs:sequence>
+			<xs:element name="bezug" type="XML-Bewertungsbezug-Entry" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="ref" type="XML-Ref" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsbezug-Entry">
+		<xs:sequence>
+			<xs:element name="von" type="XML-Bewertungsvon-Entry" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="ref" type="XML-Ref" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsvon-Entry">
+		<xs:sequence>
+			<xs:element name="nach" type="XML-Bewertungsnach-Entry" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="ref" type="XML-Ref" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsnach-Entry">
+		<xs:sequence>
+			<xs:element name="ueber" type="XML-Bewertungsueber-Entry" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="ref" type="XML-Ref" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsueber-Entry">
+		<xs:simpleContent>
+			<xs:extension base="XML-Ref">
+				<xs:attribute name="ref" type="XML-Ref" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsdaten-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Bewertungsdaten-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsdaten-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="wert" type="XML-ValueFunction"/>
+					<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Spezialbedingungen-->
+	<xs:complexType name="XML-Spezialbedingung-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Spezialbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Spezialbedingung-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="funktion" type="XML-Ref11"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Tagesbedingungen-->
+	<xs:complexType name="XML-Tagesbedingung-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Tagesbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tagesbedingung-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="wochentag-pool" type="XML-Wochentag-Pool"/>
+					<xs:element name="kalendertag-pool" type="XML-Kalendertag-Pool"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Wochentag-Pool">
+		<xs:sequence>
+			<xs:element name="nr" type="XML-IntegerValue" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach Inhalt}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Kalendertag-Pool">
+		<xs:sequence>
+			<xs:element name="datum" type="XML-DateValue" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach Inhalt}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Tageszeitbedingungen-->
+	<xs:complexType name="XML-Tageszeitbedingung-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Tageszeitbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tageszeitbedingung-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="zeitabschnitt-pool" type="XML-Zeitabschnitt-Pool"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zeitabschnitt-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Zeitabschnitt-Item" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Element}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Zeitabschnitt-Item">
+		<xs:sequence>
+			<xs:element name="von" type="XML-TimeValue"/>
+			<xs:element name="bis" type="XML-TimeValue"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Zeitraumbedingungen-->
+	<xs:complexType name="XML-Zeitraumbedingung-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Zeitraumbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zeitraumbedingung-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="zeitraum-pool" type="XML-Zeitraum-Pool"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zeitraum-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Zeitraum-Item" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Zeitraum-Item">
+		<xs:sequence>
+			<xs:element name="beginn" type="XML-Zeitraumsgrenze-Part"/>
+			<xs:element name="ende" type="XML-Zeitraumsgrenze-Part"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Zeitraumsgrenze-Part">
+		<xs:complexContent>
+			<xs:restriction base="XML-Zeitrahmensgrenze-Part">
+				<xs:sequence>
+					<xs:element name="zeitspanne" type="XML-DurationValue"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="uhrzeit" type="XML-TimeValue"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Tarifpunktbedingungen-->
+	<xs:complexType name="XML-Tarifpunktbedingung-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Tarifpunktbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktbedingung-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="von" type="XML-Ref01"/>
+					<xs:element name="nach" type="XML-Ref01"/>
+					<xs:element name="ueber" type="XML-Ref01"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Geosegmentbedingungen-->
+	<xs:complexType name="XML-Geosegmentbedingung-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Geosegmentbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Geosegmentbedingung-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="geosegment-pool" type="XML-Geosegment-Pool"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Geosegment-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Wochentag-Pool">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach Inhalt}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Bewertungsbedingungen-->
+	<xs:complexType name="XML-Bewertungsbedingung-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Bewertungsbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bewertungsbedingung-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="bewertungstyp" type="XML-Ref11"/>
+					<xs:element name="werte" type="XML-ArrayValue"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Verkehrsmittellinienbedingungen-->
+	<xs:complexType name="XML-Verkehrsmittellinienbedingung-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Verkehrsmittellinienbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Verkehrsmittellinienbedingung-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="element" type="XML-RefSet0N"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Verkehrsmittellinienbezug-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Name-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Verkehrsmittellinienbezug-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Verkehrsmittellinienbezug-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Verkehrsmitteltyp-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Linie-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Verkehrsmitteltyp-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Verkehrsmitteltyp-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Linie-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="bezug" type="XML-Ref01"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Linie-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Linie-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Linie-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:element name="bezug" type="XML-Ref01"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Bezahlartbedingungen-->
+	<xs:complexType name="XML-Bezahlartbedingung-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Bezahlartbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bezahlartbedingung-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="element" type="XML-RefSet0N"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bezahlart-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Bezahlart-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bezahlart-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Zahlungsintervallbedingungen-->
+	<xs:complexType name="XML-Zahlungsintervallbedingung-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Zahlungsintervallbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zahlungsintervallbedingung-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="element" type="XML-RefSet0N"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zahlungsintervall-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Zahlungsintervall-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zahlungsintervall-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Mitnahmebedingungen-->
+	<xs:complexType name="XML-Mitnahmebedingung-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Mitnahmebedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Mitnahmebedingung-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="anzahl-matrix" type="XML-Mitnahmeanzahl-Matrix"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Mitnahmeanzahl-Matrix">
+		<xs:sequence>
+			<xs:element name="anzahl" type="XML-Mitnahmeanzahl-Entry" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Mitnahmeanzahl-Entry">
+		<xs:complexContent>
+			<xs:extension base="XML-IntegerValue">
+				<xs:attribute name="ref" type="XML-Ref" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Mitnahmetyp-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Mitnahmetyp-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Mitnahmetyp-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Rabattmedienbedingungen-->
+	<xs:complexType name="XML-Rabattmedienbedingung-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Rabattmedienbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Rabattmedienbedingung-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="element" type="XML-RefSet0N"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Rabattmedientyp-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Rabattmedientyp-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Rabattmedientyp-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Modulkontextbedingungen-->
+	<xs:complexType name="XML-Modulkontextbedingung-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Modulkontextbedingung-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Modulkontextbedingung-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NameGruppe-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="element" type="XML-RefSet0N"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Modulkontext-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Modulkontext-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Modulkontext-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue"/>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Interpretationen-->
+	<xs:complexType name="XML-BIFAInterpretation-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-BIFAInterpretation-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-BIFAInterpretation-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="abfahrtszeit" type="XML-Ref01"/>
+					<xs:element name="ankunftszeit" type="XML-Ref01"/>
+					<xs:element name="vontarifpunkt" type="XML-Ref01"/>
+					<xs:element name="nachtarifpunkt" type="XML-Ref01"/>
+					<xs:element name="uebertarifpunkte" type="XML-Ref01"/>
+					<xs:element name="ueberwegevariante" type="XML-Ref01"/>
+					<xs:element name="verkehrsmittellinienbezug" type="XML-Ref01"/>
+					<xs:element name="produktgrenzpunktdaten-table" type="XML-Produktgrenzpunktdaten-Table"/>
+					<xs:element name="produktgrenzpunktausnahme-table" type="XML-Produktgrenzpunktausnahme-Table"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Produktgrenzpunktdaten-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Produktgrenzpunkt-Table">
+				<xs:sequence>
+					<xs:element name="vorherproduktgruppe" type="XML-RefList0N"/>
+					<xs:element name="vorhertagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="vorhertageszeitbedingung" type="XML-RefList0N"/>
+					<xs:element name="vorhertarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="vorherbewertungsbedingung" type="XML-RefList0N"/>
+					<xs:element name="vorherverkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="nachherproduktgruppe" type="XML-RefList0N"/>
+					<xs:element name="nachhertagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="nachhertageszeitbedingung" type="XML-RefList0N"/>
+					<xs:element name="nachhertarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="nachherbewertungsbedingung" type="XML-RefList0N"/>
+					<xs:element name="nachherverkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Produktgrenzpunktausnahme-Table">
+		<xs:complexContent>
+			<xs:restriction base="XML-Produktgrenzpunkt-Table">
+				<xs:sequence>
+					<xs:element name="vorherproduktgruppe" type="XML-RefList0N"/>
+					<xs:element name="vorhertagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="vorhertageszeitbedingung" type="XML-RefList0N"/>
+					<xs:element name="vorhertarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="vorherbewertungsbedingung" type="XML-RefList0N"/>
+					<xs:element name="vorherverkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="nachherproduktgruppe" type="XML-RefList0N"/>
+					<xs:element name="nachhertagesbedingung" type="XML-RefList0N"/>
+					<xs:element name="nachhertageszeitbedingung" type="XML-RefList0N"/>
+					<xs:element name="nachhertarifpunktbedingung" type="XML-RefList0N"/>
+					<xs:element name="nachherbewertungsbedingung" type="XML-RefList0N"/>
+					<xs:element name="nachherverkehrsmittellinienbedingung" type="XML-RefList0N"/>
+					<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+					<xs:element name="ausnahme" type="XML-RefList0N"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Produktgrenzpunkt-Table">
+		<xs:sequence>
+			<xs:element name="vorherproduktgruppe" type="XML-RefList0N"/>
+			<xs:element name="vorhertagesbedingung" type="XML-RefList0N"/>
+			<xs:element name="vorhertageszeitbedingung" type="XML-RefList0N"/>
+			<xs:element name="vorhertarifpunktbedingung" type="XML-RefList0N"/>
+			<xs:element name="vorherbewertungsbedingung" type="XML-RefList0N"/>
+			<xs:element name="vorherverkehrsmittellinienbedingung" type="XML-RefList0N"/>
+			<xs:element name="nachherproduktgruppe" type="XML-RefList0N"/>
+			<xs:element name="nachhertagesbedingung" type="XML-RefList0N"/>
+			<xs:element name="nachhertageszeitbedingung" type="XML-RefList0N"/>
+			<xs:element name="nachhertarifpunktbedingung" type="XML-RefList0N"/>
+			<xs:element name="nachherbewertungsbedingung" type="XML-RefList0N"/>
+			<xs:element name="nachherverkehrsmittellinienbedingung" type="XML-RefList0N"/>
+			<xs:element name="spezialbedingung" type="XML-RefList0N"/>
+			<xs:element name="ausnahme" type="XML-RefList0N" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Nummerninterpretation-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Nummerninterpretation-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Nummerninterpretation-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="nummerntext-pool" type="XML-Nummerntext-Pool"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Nummerntext-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Nummerntext-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Nummerntext-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bitleisteninterpretation-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Bitleisteninterpretation-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bitleisteninterpretation-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="tarifpunkt" type="XML-RefList1N"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Raumnummerninterpretation-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Raumnummerninterpretation-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Raumnummerninterpretation-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Name-Item">
+				<xs:sequence>
+					<xs:element name="raummodifikation-pool" type="XML-Raummodifikation-Pool"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Raummodifikation-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Raummodifikation-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Raummodifikation-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="ink" type="XML-RefSet0N"/>
+					<xs:element name="exk" type="XML-RefSet0N"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Adaptierung-->
+	<xs:complexType name="XML-Eingangsadapter-Matrix">
+		<xs:sequence>
+			<xs:element name="e" type="XML-Eingangsadapter-Entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Eingangsadapter-Entry">
+		<xs:simpleContent>
+			<xs:extension base="XML-Ref">
+				<xs:attribute name="ref" type="XML-Ref" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsadapter-Matrix">
+		<xs:sequence>
+			<xs:element name="a" type="XML-Ausgangsadapter-Entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Ausgangsadapter-Entry">
+		<xs:simpleContent>
+			<xs:extension base="XML-Ref">
+				<xs:attribute name="ref" type="XML-Ref" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Preisanpassung-Matrix">
+		<xs:sequence>
+			<xs:element name="a" type="XML-Preisanpassung-Entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Preisanpassung-Entry">
+		<xs:sequence>
+			<xs:element name="betrag" type="XML-IntegerValue" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="ref" type="XML-Ref" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Modulkontextadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Modulkontextadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Modulkontextadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue"/>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Produktadapter-Pool">
+		<xs:complexContent>
+			<xs:extension base="XML-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Produktadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Produktadapter-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:element name="schluessel" type="XML-RNSchluessel-Part"/>
+					<xs:element name="kontrollkontext" type="XML-RefSet0N"/>
+					<xs:element name="erfassungskontext" type="XML-RefSet0N"/>
+					<xs:element name="anpassungskontext" type="XML-RefSet0N"/>
+					<xs:element name="darstellungskontext" type="XML-RefSet0N"/>
+					<xs:element name="produktermittlungskontext" type="XML-RefSet0N"/>
+					<xs:element name="transaktionsauswertungskontext" type="XML-RefSet0N"/>
+					<xs:element name="kvpProduktNr" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Flaechenelement-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Tarifpunktadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Flaechenelement-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="geobezug" type="XML-Geobezug-Part"/>
+						<xs:element name="typ" type="XML-StringValue"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktreferenzadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Tarifpunktadapter-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Tarifpunktreferenzadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Tarifpunktreferenzadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Tarifpunktadapter-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="geobezug" type="XML-Geobezug-Part"/>
+						<xs:element name="typ" type="XML-StringValue"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Wegevariantenadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Flaechenelement-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Wegevariantenadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Wegevariantenadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Flaechenelement-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="geobezug" type="XML-Geobezug-Part"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Linienadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Linienadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Linienadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Verkehrsmitteltypadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Verkehrsmitteltypadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Verkehrsmitteltypadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bezahlartadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Bezahlartadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Bezahlartadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Waehrungsadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Waehrungsadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Waehrungsadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zahlungsintervalladapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Zahlungsintervalladapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Zahlungsintervalladapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Mitnahmetypadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Mitnahmetypadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Mitnahmetypadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Rabattmedientypadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Rabattmedientypadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Rabattmedientypadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Ausgangstext-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Identifikationsparameteradapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Identifikationsparameter-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Identifikationsparameteradapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Identifikationsparameteradapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Identifikationsparameter-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="wert-pool" type="XML-Identifikationsparameterwertadapter-Pool"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Identifikationsparameterwertadapter-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Identifikationsparameterwert-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Identifikationsparameterwertadapter-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Identifikationsparameterwertadapter-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Identifikationsparameterwert-Item">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue"/>
+					<xs:element name="name" type="XML-StringValue"/>
+					<xs:element name="text-matrix" type="XML-Ausgangstext-Matrix"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--Schlüsseldaten-->
+	<xs:complexType name="XML-Schluessel-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Schluessel-Item" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Implizites key Attribut, Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Schluessel-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="nr" type="XML-IntegerValue"/>
+					<xs:element name="name" type="XML-StringValue"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-RNSchluessel-Part">
+		<xs:complexContent>
+			<xs:restriction base="XML-Schluessel-Part">
+				<xs:sequence>
+					<xs:element name="mkkvp" type="XML-Ref01"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-PVSchluessel-Part">
+		<xs:complexContent>
+			<xs:restriction base="XML-Schluessel-Part">
+				<xs:sequence>
+					<xs:element name="mkpv" type="XML-Ref01"/>
+					<xs:element name="mktr" type="XML-Ref01"/>
+					<xs:element name="mkauth" type="XML-Ref01"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Schluessel-Part">
+		<xs:sequence>
+			<xs:element name="mkpv" type="XML-Ref01" minOccurs="0"/>
+			<xs:element name="mktr" type="XML-Ref01" minOccurs="0"/>
+			<xs:element name="mkkvp" type="XML-Ref01" minOccurs="0"/>
+			<xs:element name="mkauth" type="XML-Ref01" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Zusatzdaten-->
+	<xs:complexType name="XML-Kommentar-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Kommentar-Item" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Kommentar-Item">
+		<xs:sequence>
+			<xs:element name="text" type="XML-StringValue"/>
+			<xs:element name="item" type="XML-RefSet1N"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Signatur-Part">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="type" type="XML-StringValue"/>
+			<xs:element name="data" type="XML-BinaryValue"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Annotation-Part">
+		<xs:sequence>
+			<xs:element name="data" type="XML-BinaryValue" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--Testfallauswertung-->
+	<xs:element name="pkm-testanfrage" type="XML-Testanfrage"/>
+	<xs:element name="pkm-testergebnis" type="XML-Testergebnis"/>
+	<xs:complexType name="XML-Testanfrage">
+		<xs:complexContent>
+			<xs:restriction base="XML-Testdaten">
+				<xs:sequence>
+					<xs:element name="zeitpunkt" type="XML-DatetimeValue"/>
+					<xs:element name="bemerkung" type="XML-StringValue"/>
+					<xs:element name="testfall-pool" type="XML-Testfallanfrage-Pool"/>
+					<xs:element name="testmodul-pool" type="XML-Testmodul-Pool"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Testergebnis">
+		<xs:complexContent>
+			<xs:restriction base="XML-Testdaten">
+				<xs:sequence>
+					<xs:element name="zeitpunkt" type="XML-DatetimeValue"/>
+					<xs:element name="bemerkung" type="XML-StringValue"/>
+					<xs:element name="testfall-pool" type="XML-Testfallergebnis-Pool"/>
+					<xs:element name="testmodul-pool" type="XML-Testmodul-Pool"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Testdaten">
+		<xs:sequence>
+			<xs:element name="zeitpunkt" type="XML-DatetimeValue"/>
+			<xs:element name="bemerkung" type="XML-StringValue"/>
+			<xs:element name="testfall-pool" type="XML-Testfalldaten-Pool"/>
+			<xs:element name="testmodul-pool" type="XML-Testmodul-Pool"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Testmodul-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Testmodul-Item" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Element}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Testmodul-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="moduldaten" type="XML-RNTarifmodul" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Testfallanfrage-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Testfalldaten-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Testfallanfrage-Item" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Testfallanfrage-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Testfalldaten-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="eingabewert-matrix" type="XML-Testdaten-Matrix"/>
+						<xs:element name="erwartungswert-matrix" type="XML-Testdaten-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Testfallergebnis-Pool">
+		<xs:complexContent>
+			<xs:restriction base="XML-Testfalldaten-Pool">
+				<xs:sequence>
+					<xs:element name="item" type="XML-Testfallergebnis-Item" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>{Sortiert nach erstem Element}</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Testfallergebnis-Item">
+		<xs:complexContent>
+			<xs:restriction base="XML-Testfalldaten-Item">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:element name="nr" type="XML-IntegerValue"/>
+						<xs:element name="name" type="XML-StringValue"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="status" type="XML-IntegerValue"/>
+						<xs:element name="bemerkung" type="XML-StringValue"/>
+						<xs:element name="eingabewert-matrix" type="XML-Testdaten-Matrix"/>
+						<xs:element name="ausgabewert-matrix" type="XML-Testdaten-Matrix"/>
+						<xs:element name="erwartungswert-matrix" type="XML-Testdaten-Matrix"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Testfalldaten-Pool">
+		<xs:sequence>
+			<xs:element name="item" type="XML-Testfalldaten-Item" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Element}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Testfalldaten-Item">
+		<xs:complexContent>
+			<xs:extension base="XML-NrName-Item">
+				<xs:sequence>
+					<xs:element name="status" type="XML-IntegerValue" minOccurs="0"/>
+					<xs:element name="bemerkung" type="XML-StringValue" minOccurs="0"/>
+					<xs:element name="eingabewert-matrix" type="XML-Testdaten-Matrix"/>
+					<xs:element name="ausgabewert-matrix" type="XML-Testdaten-Matrix" minOccurs="0"/>
+					<xs:element name="erwartungswert-matrix" type="XML-Testdaten-Matrix"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Testdaten-Matrix">
+		<xs:sequence>
+			<xs:element name="schnittstelle" type="XML-Testdatenschnittstelle-Entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XML-Testdatenschnittstelle-Entry">
+		<xs:sequence>
+			<xs:element name="parameter" type="XML-Testdatenparameter-Entry" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:unsignedShort" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Testdatenparameter-Entry">
+		<xs:sequence>
+			<xs:element name="ablauf" type="XML-Testdatenablauf-Entry" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>{Sortiert nach erstem Attribut (lexikographisch)}</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="nr" type="xs:unsignedShort" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XML-Testdatenablauf-Entry">
+		<xs:sequence>
+			<xs:element name="wert" type="XML-Testdaten-Value" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="ref" type="XML-Testablauf-Ref" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="XML-Testablauf-Ref">
+		<xs:list itemType="xs:byte"/>
+	</xs:simpleType>
+	<xs:complexType name="XML-Testdaten-Value">
+		<xs:complexContent>
+			<xs:restriction base="XML-Testdaten-Array">
+				<xs:choice>
+					<xs:element name="bits" type="XML-BinaryValue"/>
+					<xs:element name="text" type="XML-StringValue"/>
+					<xs:element name="zahl" type="XML-IntegerValue"/>
+					<xs:element name="liste" type="XML-Testdaten-Array"/>
+					<xs:element name="datum" type="XML-DateValue"/>
+					<xs:element name="uhrzeit" type="XML-TimeValue"/>
+					<xs:element name="zeitpunkt" type="XML-DatetimeValue"/>
+					<xs:element name="zeitspanne" type="XML-DurationValue"/>
+					<xs:element name="ja" type="XML-TrueValue"/>
+					<xs:element name="nein" type="XML-FalseValue"/>
+					<xs:element name="undefiniert" type="XML-VoidValue"/>
+				</xs:choice>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="XML-Testdaten-Array">
+		<xs:complexContent>
+			<xs:restriction base="XML-ArrayValue">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="bits" type="XML-BinaryValue"/>
+					<xs:element name="text" type="XML-StringValue"/>
+					<xs:element name="zahl" type="XML-IntegerValue"/>
+					<xs:element name="liste" type="XML-Testdaten-Array"/>
+					<xs:element name="datum" type="XML-DateValue"/>
+					<xs:element name="uhrzeit" type="XML-TimeValue"/>
+					<xs:element name="zeitpunkt" type="XML-DatetimeValue"/>
+					<xs:element name="zeitspanne" type="XML-DurationValue"/>
+					<xs:element name="ja" type="XML-TrueValue"/>
+					<xs:element name="nein" type="XML-FalseValue"/>
+					<xs:element name="undefiniert" type="XML-VoidValue"/>
+				</xs:choice>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

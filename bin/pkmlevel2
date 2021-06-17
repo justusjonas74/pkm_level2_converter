@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require 'pkmlevel2'
+
+if ARGV.first 
+  orig_file_name = ARGV.first
+  converter = PKMLevel2.new(orig_file_name)
+  converter.convert_pkm()
+else
+  arr_of_local_xml = Dir["*.xml"]
+  if arr_of_local_xml.empty? 
+	puts "Error: No .xml file found."
+	puts "Usage \"pkmlevel2 filename.xml\""
+  else
+	arr_of_local_xml.each do |xml_file|
+    converter = PKMLevel2.new(orig_file_name)
+    converter.convert_pkm()
+  else
+	end
+  end
+  puts "Press ENTER to close."
+  gets
+end
