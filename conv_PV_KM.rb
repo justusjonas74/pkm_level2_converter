@@ -33,7 +33,9 @@ def convert_pkm(orig_file_name)
 end
 
 def xml_is_valid_pkm(xml)
-  xsd =  File.read("ka/pkm/1/XML-Schema_PKM.xsd")
+  #xsd =  File.read("./ka/pkm/1/XML-Schema_PKM.xsd")
+  file_path = File.join(File.dirname(__FILE__), './ka/pkm/1/XML-Schema_PKM.xsd') 
+  xsd =  File.read(file_path)
   return check_xsd(xsd,xml)
 end
 

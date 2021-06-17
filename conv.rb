@@ -1,11 +1,18 @@
 require 'nokogiri'
 require_relative 'check_xsd'
 
+
 def convertFileName(file_name)
+  puts file_name
   f = file_name.split('_')
+  puts f
   org_id_l3 = f[1].to_i
+  puts org_id_l3
   org_id_l2 = org_id_l3 + 0x8000 
+  puts org_id_l2
+  
   f[1] = org_id_l2.to_s
+  puts f.join("_")
   return f.join("_")
 end
 
@@ -32,7 +39,9 @@ def convert_pkm(orig_file_name)
 end
 
 def xml_is_valid_pkm(xml)
-  xsd =  File.read("ka/pkm/1/XML-Schema_PKM.xsd")
+  #xsd =  File.read("./ka/pkm/1/XML-Schema_PKM.xsd")
+  file_path = File.join(File.dirname(__FILE__), './ka/pkm/1/XML-Schema_PKM.xsd') 
+  xsd =  File.read(file_path)
   return check_xsd(xsd,xml)
 end
 
@@ -66,6 +75,21 @@ def convert_ids
   #dl-km/kontrollmodul-pool/item/moduldaten/nummerninterpretation-pool/item[nr=2]/nummerntext-pool/item/nr
 end
 
-orig_file_name = ARGV.first
-convert_pkm(orig_file_name)
+if ARGV.first 
+  orig_file_name = ARGV.first
+  convert_pkm(orig_file_name)
+else
+  arr_of_local_xml = Dir["*.xml"]
+  if arr_of_local_xml.empty? 
+	puts "Error: No .xml file found."
+	puts "Usage \"ruby conv.rb filename.xml\""
+  else
+	arr_of_local_xml.each do |xml_file|
+		convert_pkm(xml_file)
+	end
+  end
+  puts "Press ENTER to close."
+  gets
+end
+
 
