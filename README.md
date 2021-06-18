@@ -1,28 +1,16 @@
 # PkmLevel2Converter
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/pkm_level2_converter`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'pkm_level2_converter'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
+Install it yourself as:
+```bash
     $ gem install pkm_level2_converter
+``` 
 
 ## Usage
-
-TODO: Write usage instructions here
+```bash
+    $ pkmlevel2 DLKM_1234_G210801_0000_E1_1_1.3_SuperVU.xml
+```
 
 ## Development
 
@@ -32,7 +20,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/pkm_level2_converter.
+Bug reports and pull requests are welcome on GitHub at https://github.com/justusjonas74/pkm_level2_converter.
 
 ## License
 
