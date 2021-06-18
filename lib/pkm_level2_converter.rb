@@ -8,6 +8,10 @@ module PkmLevel2Converter
     def initialize(file_name)
       @filename = file_name
     end
+
+    def filename
+      @filename
+    end
   
     def convertFileName()
       file_name = @filename
@@ -46,7 +50,7 @@ module PkmLevel2Converter
         end
         return false
       end
-  end
+    end
   
     def convert_pkm()
       orig_file_name = @filename

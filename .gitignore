@@ -1,3 +1,5 @@
+test/*.xml
+
 /.bundle/
 /.yardoc
 /_yardoc/
