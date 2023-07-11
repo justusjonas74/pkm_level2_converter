@@ -1,21 +1,21 @@
 #!/usr/bin/env ruby
 require 'pkm_level2_converter'
 
-if ARGV.first 
+if ARGV.first
   orig_file_name = ARGV.first
   converter = PkmLevel2Converter::PKM.new(orig_file_name)
-  converter.convert_pkm()
+  converter.convert_pkm
 else
-  arr_of_local_xml = Dir["*.xml"]
-  if arr_of_local_xml.empty? 
-    puts "Error: No .xml file found."
-    puts "Usage \"pkmlevel2 filename.xml\""
+  arr_of_local_xml = Dir['*.xml']
+  if arr_of_local_xml.empty?
+    puts 'Error: No .xml file found.'
+    puts 'Usage "pkmlevel2 filename.xml"'
   else
-	  arr_of_local_xml.each do |xml_file|
+    arr_of_local_xml.each do |xml_file|
       converter = PkmLevel2Converter::PKM.new(xml_file)
-      converter.convert_pkm()
-  	end
+      converter.convert_pkm
+    end
   end
-  puts "Press ENTER to close."
+  puts 'Press ENTER to close.'
   gets
 end

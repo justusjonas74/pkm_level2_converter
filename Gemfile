@@ -8,7 +8,7 @@ gemspec
 gem 'nokogiri'
 
 group :development do
-  gem "rake", "~> 13.0"
-  gem "rspec"
+  gem 'rake', '~> 13.0'
+  gem 'rspec'
   gem 'rubocop', require: false
 end
