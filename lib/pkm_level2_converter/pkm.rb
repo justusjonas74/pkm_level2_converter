@@ -13,6 +13,7 @@ class PKM
             pathOfPool: '//xmlns:rn-tm/xmlns:ausgangsschnittstelle-pool | //xmlns:dl-km/xmlns:ausgangsschnittstelle-pool', 
             typeOfPool: AusgangsschnittstellenPool
         }
+        # Sprachen
     }
     
     def self.check_xsd(xsd, xml)
