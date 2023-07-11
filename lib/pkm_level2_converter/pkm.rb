@@ -3,10 +3,10 @@
 require_relative 'pools'
 require 'pry'
 
-# PKM-Klasse
-
+# Main Class
 class PKM
-  @@pools = {
+  def self.pools
+    return {
     ausgangskontextPool: {
       pathOfPool: '//xmlns:rn-tm/xmlns:ausgangskontext-pool | //xmlns:dl-km/xmlns:ausgangskontext-pool',
       typeOfPool: AusgangskontextPool
@@ -38,7 +38,7 @@ class PKM
     pool = @@pools[poolSymbol]
     pathOfPool = pool[:pathOfPool]
     typeOfPool = pool[:typeOfPool]
-    Pool.parsePool(@xml_doc, pathOfPool, typeOfPool)
+    Pool.parse_pool(@xml_doc, pathOfPool, typeOfPool)
   end
 
   def self.xml_is_valid_pkm(xml)
