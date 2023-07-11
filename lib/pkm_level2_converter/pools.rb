@@ -30,10 +30,11 @@ end
 # Ein XML-Ausgangskontext-Pool kodiert die Auflistung aller Ausgangskontext einesTarifmoduls.
 class AusgangskontextPool < Pool
   def self.type
-    return Ausgangskontext
+    Ausgangskontext
   end
+
   def initialize(xml_node)
-    super(xml_node, self.type)
+    super(xml_node, AusgangskontextPool.type)
   end
 end
 
@@ -41,20 +42,22 @@ end
 class AusgangsparameterPool < Pool
   # TODO... Das passt noch nicht zur Pool-Implementierung
   def self.type
-    return Ausgangsparameter
+    Ausgangsparameter
   end
 
   def initialize(xml_node)
-    super(xml_node, self.type)
+    super(xml_node, AusgangsparameterPool.type)
   end
 end
 
 # Ein XML-Ausgangsschnittstelle-Poolkodiert die Auflistung allerAusgangsschnittstellen einesTarifmoduls.
 class AusgangsschnittstellenPool
   def self.type
-    return Ausgangsschnittstelle
+    Ausgangsschnittstelle
+  end
+
   def initialize(xml_node)
-    super(xml_node, self.type)
+    super(xml_node, AusgangsschnittstellenPool.type)
   end
 
   def cr374
