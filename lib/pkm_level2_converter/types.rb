@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Generische Klasse Poolelement
 
 class Poolelement

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'types'
 # Generische Pool-Klasse
 
@@ -47,10 +49,10 @@ class AusgangsschnittstellenPool
   end
 
   def cr374
-    @items.select { |asst| asst.cr374? }
+    @items.select(&:cr374?)
   end
 
   def cr374?
-    (cr374.length != 0)
+    !cr374.empty?
   end
 end

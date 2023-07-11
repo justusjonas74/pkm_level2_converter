@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'pools'
 require 'pry'
 
@@ -94,7 +96,7 @@ class PKM
     when 'rntm'
       convert_ids_rntm
     else
-      puts(@xml_doc.root.name + ' wird nicht unterstützt.')
+      puts("#{@xml_doc.root.name} wird nicht unterstützt.")
     end
   end
 
@@ -125,18 +127,18 @@ class PKM
     # dl-km/organisation/id
     convert_xpath_l3_id(@xml_doc, 'xmlns:dl-km/xmlns:organisation/xmlns:id')
     puts 'Converted following IDs:'
-    puts '/dl-km/organisation/id = ' + @xml_doc.xpath('/xmlns:dl-km/xmlns:organisation/xmlns:id').text
+    puts "/dl-km/organisation/id = #{@xml_doc.xpath('/xmlns:dl-km/xmlns:organisation/xmlns:id').text}"
 
     @xml_doc.xpath('/xmlns:dl-km/xmlns:kontrollmodul-pool/xmlns:item').each do |node|
       # Organisations-ID des PV:
       # dl-km/kontrollmodul-pool/item/moduldaten/organisation/id
       convert_xpath_l3_id(node, 'xmlns:moduldaten/xmlns:organisation/xmlns:id')
-      puts '# dl-km/kontrollmodul-pool/item/moduldaten/organisation/id = ' + node.xpath('xmlns:moduldaten/xmlns:organisation/xmlns:id').text
+      puts "# dl-km/kontrollmodul-pool/item/moduldaten/organisation/id = #{node.xpath('xmlns:moduldaten/xmlns:organisation/xmlns:id').text}"
       # Für PVKM zulässige Organisations-IDs der DL:
       # dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id
       node.xpath('xmlns:moduldaten/xmlns:organisation-pool/xmlns:item').each do |child|
         convert_xpath_l3_id(child, 'xmlns:id')
-        puts '## dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id = ' + child.xpath('xmlns:id').text
+        puts "## dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id = #{child.xpath('xmlns:id').text}"
       end
     end
     # Für Anzeige von KVP als Klartext:
@@ -156,12 +158,12 @@ class PKM
     # dl-km/kontrollmodul-pool/item/moduldaten/organisation/id
     # convert_xpath_l3_id(node, '/xmlns:pv-km/xmlns:organisation/xmlns:id')
     convert_xpath_l3_id(node, 'xmlns:organisation/xmlns:id')
-    puts '# pv-km/organisation/id = ' + node.xpath('xmlns:organisation/xmlns:id').text
+    puts "# pv-km/organisation/id = #{node.xpath('xmlns:organisation/xmlns:id').text}"
     # Für PVKM zulässige Organisations-IDs der DL:
     # dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id
     node.xpath('xmlns:organisation-pool/xmlns:item').each do |child|
       convert_xpath_l3_id(child, 'xmlns:id')
-      puts '## pv-km/organisation-pool/item/id = ' + child.xpath('xmlns:id').text
+      puts "## pv-km/organisation-pool/item/id = #{child.xpath('xmlns:id').text}"
     end
     # end
     # Für Anzeige von KVP als Klartext:
@@ -173,19 +175,19 @@ class PKM
     # rntm/herausgeber/nr
     convert_xpath_l3_id(@xml_doc, 'xmlns:rntm/xmlns:herausgeber/xmlns:nr')
     puts 'Converted following IDs:'
-    puts 'rntm/herausgeber/nr = ' + @xml_doc.xpath('xmlns:rntm/xmlns:herausgeber/xmlns:nr').text
+    puts "rntm/herausgeber/nr = #{@xml_doc.xpath('xmlns:rntm/xmlns:herausgeber/xmlns:nr').text}"
 
     @xml_doc.xpath('/xmlns:rntm/xmlns:tarifmodul-pool/xmlns:item').each do |node|
       # Organisations-ID des PV:
       # dl-km/kontrollmodul-pool/item/moduldaten/organisation/id
 
       convert_xpath_l3_id(node, 'xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr')
-      puts '# /rntm/tarifmodul-pool/item/tarifmodul/herausgeber/nr/ = ' + node.xpath('xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr').text
+      puts "# /rntm/tarifmodul-pool/item/tarifmodul/herausgeber/nr/ = #{node.xpath('xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr').text}"
       # Für PVKM zulässige Organisations-IDs der DL:
       # dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id
       node.xpath('xmlns:tarifmodul/xmlns:organisation-pool/xmlns:item').each do |child|
         convert_xpath_l3_id(child, 'xmlns:nr')
-        puts '## /rntm/tarifmodul-pool/item/tarifmodul/organisation-pool/item/nr = ' + child.xpath('xmlns:nr').text
+        puts "## /rntm/tarifmodul-pool/item/tarifmodul/organisation-pool/item/nr = #{child.xpath('xmlns:nr').text}"
       end
     end
     # Für Anzeige von KVP als Klartext:
@@ -199,7 +201,7 @@ class PKM
     asst_pool_raw = @xml_doc.at_xpath('//xmlns:rn-tm/xmlns:ausgangsschnittstelle-pool | //xmlns:dl-km/xmlns:ausgangsschnittstelle-pool')
     asst_pool = AusgangsschnittstellenPool.new(asst_pool_raw)
 
-    if !asst_pool_raw || asst_pool.ausgangsschnittstellen.length == 0
+    if !asst_pool_raw || asst_pool.ausgangsschnittstellen.empty?
       puts 'Das RN-TM / DL-KM hat keinerlei Aussgangsschnittstellen definiert. '
       return nil
     end
