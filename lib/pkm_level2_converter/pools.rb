@@ -4,11 +4,11 @@ require_relative 'types.rb'
 class Pool
     
     # MOVED TO PKM-Class
-    # def self.parsePool(xml_node, pathOfPool, typeOfPool)
-    #     pool = @@pools[poolSymbol]
-    #     node  = xml_node.at_xpath(pathOfPool)
-    #     ausgangskontextPool = typeOfPool.new (node)
-    # end
+    def self.parsePool(xml_node, pathOfPool, typeOfPool)
+        #pool = @@pools[poolSymbol]
+        node  = xml_node.at_xpath(pathOfPool)
+        return typeOfPool.new (node)
+    end
 
     def initialize(xml_node, type)
         @type = type
@@ -37,7 +37,7 @@ class AusgangsparameterPool < Pool
 
     # TODO... Das passt noch nicht zur Pool-Implementierung
     @@type = Ausgangsparameter
-    def initialize(xml_node, ?, ? )
+    def initialize(xml_node)
         super(xml_node, @@type)
     end
 end

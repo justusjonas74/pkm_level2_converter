@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
-
-require 'pkm_level2_converter'
 require 'pry'
+require 'pkm_level2_converter'
 
 if ARGV.first 
   orig_file_name = ARGV.first
-  converter = PkmLevel2Converter::Converter.new(orig_file_name)
+  converter = PkmLevel2Converter::PKM.new(orig_file_name)
+  binding.pry
   converter.convert_pkm()
 else
   arr_of_local_xml = Dir["*.xml"]
@@ -15,7 +15,6 @@ else
   else
 	  arr_of_local_xml.each do |xml_file|
       converter = PkmLevel2Converter::PKM.new(orig_file_name)
-      binding.pry
       converter.convert_pkm()
   	end
   end

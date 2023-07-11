@@ -1,4 +1,5 @@
 require_relative 'pools.rb'
+require 'pry'
 
 # PKM-Klasse  
   
@@ -29,24 +30,24 @@ class PKM
         return false
       end
     end
-
+    
     def self.parsePool(poolSymbol)
         pool = @@pools[poolSymbol]
-        pathOfPool= pool.pathOfPool
-        typeOfPool = pool.typeOfPool
+        pathOfPool= pool[:pathOfPool]
+        typeOfPool = pool[:typeOfPool]
         return Pool.parsePool(@xml_doc, pathOfPool, typeOfPool)
     end
 
     def self.xml_is_valid_pkm(xml)
       #xsd =  File.read("./ka/pkm/1/XML-Schema_PKM.xsd")
       path=''
-      case @xml_doc.root.name
+      case xml.root.name
       when "pv-km"
-        path = './pkm_level2_converter/ka/pkm/1/XML-Schema_PKM.xsd'
+        path = './ka/pkm/1/XML-Schema_PKM.xsd'
       when "dl-km"
-        path = './pkm_level2_converter/ka/pkm/1/XML-Schema_PKM.xsd'
+        path = './ka/pkm/1/XML-Schema_PKM.xsd'
       when "rntm"
-        path = './pkm_level2_converter/ka/pkm/2/XML-Schema_PKM.xsd'
+        path = './ka/pkm/2/XML-Schema_PKM.xsd'
       end
 
       file_path = File.join(File.dirname(__FILE__), path) 
@@ -63,11 +64,11 @@ class PKM
     
     def initialize(file_name)
         @filename = file_name
-        orig_file_name = @filename
-        if File.file?(orig_file_name) 
-            @xml_doc = File.open(orig_file_name) { |f| Nokogiri::XML(f) }
+        
+        if File.file?(@filename) 
+            @xml_doc = File.open(@filename) { |f| Nokogiri::XML(f) }
           else 
-            puts "File ('#{orig_file_name}') not found."    
+            puts "File ('#{@filename}') not found."    
           end
         # Is it a valid PKM file? 
         if PKM.xml_is_valid_pkm(@xml_doc)
@@ -82,7 +83,7 @@ class PKM
         @ausgangsschnittstellenPool = PKM.parsePool(:ausgangsschnittstellenPool)
     end
     
-    attr_reader :ausgangskontextPool, :ausgangsschnittstellenPool, :filename
+    attr_reader :ausgangskontextPool, :ausgangsschnittstellenPool, :filename, :xml_doc
 
     def convertIds()
         case @xml_doc.root.name
