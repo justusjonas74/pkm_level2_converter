@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 #  spec.description   = "TODO: Write a longer description or delete this line."
   spec.homepage      = "https://rubygems.org/gems/pkm_level2_converter"
   spec.license       = "MIT"
-  spec.required_ruby_version = ">= 2.4.0"
+  spec.required_ruby_version = '>= 3.2.2'
 
   #spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
@@ -31,9 +31,6 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
-  spec.add_dependency "nokogiri", "~> 1.10.4"
-  spec.add_development_dependency "rspec", "~> 3.2"
-  spec.add_development_dependency "pry", "~> 0.13.1"
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html
