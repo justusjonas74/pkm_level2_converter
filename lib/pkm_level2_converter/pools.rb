@@ -23,6 +23,10 @@ class Pool
   def get_by_reference(key)
     @items.find { |item| item.key == key }
   end
+
+  def empty?
+    (@items.nil? || @items.empty?)
+  end
 end
 
 # Spezifische Pool-Klassen
@@ -51,7 +55,7 @@ class AusgangsparameterPool < Pool
 end
 
 # Ein XML-Ausgangsschnittstelle-Poolkodiert die Auflistung allerAusgangsschnittstellen einesTarifmoduls.
-class AusgangsschnittstellenPool
+class AusgangsschnittstellenPool < Pool
   def self.type
     Ausgangsschnittstelle
   end

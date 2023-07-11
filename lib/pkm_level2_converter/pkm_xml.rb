@@ -45,15 +45,20 @@ class PKMXml
 
   def initialize(file_name)
     @filename = file_name
+    is_a_file = File.file?(@filename)
+    puts "File ('#{@filename}') not found." unless is_a_file
+    return unless is_a_file
 
-    if File.file?(@filename)
-      @xml_doc = File.open(@filename) { |f| Nokogiri::XML(f) }
-    else
-      puts "File ('#{@filename}') not found."
-    end
+    @xml_doc = File.open(@filename) { |f| Nokogiri::XML(f) }
     # Is it a valid PKM file?
-    #    return unless PKMXml.xml_is_valid_pkm(@xml_doc)
+    xml_is_invalid_pkm = (@xml_doc.nil? || !valid_xml?)
+    puts 'File is not a valid PKM file' if xml_is_invalid_pkm
+    return if xml_is_invalid_pkm
+
+    @pkm_data = PKM.new(@xml_doc)
   end
+
+  attr_reader :pkm_data
 
   def convert_file_name
     pn = Pathname.new(@filename)
@@ -65,13 +70,31 @@ class PKMXml
     Pathname.new(dir).join(f.join('_'))
   end
 
+  def convert_org_id_to_level2
+    case @xml_doc.root.name
+    when 'pv-km'
+      convert_ids_pvkm
+    when 'dl-km'
+      convert_ids_dlkm
+    when 'rntm'
+      convert_ids_rntm
+    else
+      puts("#{@xml_doc.root.name} wird nicht unterstützt.")
+    end
+
+    convert_ids_cr374
+    # binding.pry
+    save_file
+  end
+
   def valid_xml?
-    PkmXml.xml_is_valid_pkm(@xml_doc)
+    PKMXml.xml_is_valid_pkm(@xml_doc)
   end
 
   def save_file
-    file = @filename
-    return unless PKM.xml_is_valid_pkm(@xml_doc)
+    # file = @filename
+    file = @xml_doc
+    return unless valid_xml?
 
     # SAVE FILE with NEW name
     new_file_name = convert_file_name
@@ -82,35 +105,33 @@ class PKMXml
   end
 
   def convert_ids_dlkm
-    xml_doc = @xml_doc
     # Organisations-ID des DL:
     # dl-km/organisation/id
-    PKM.convert_xpath_l3_id(xml_doc, 'xmlns:dl-km/xmlns:organisation/xmlns:id')
+    PKMXml.convert_xpath_l3_id(@xml_doc, 'xmlns:dl-km/xmlns:organisation/xmlns:id')
     puts 'Converted following IDs:'
-    puts "/dl-km/organisation/id = #{xml_doc.xpath('/xmlns:dl-km/xmlns:organisation/xmlns:id').text}"
+    puts "/dl-km/organisation/id = #{@xml_doc.xpath('/xmlns:dl-km/xmlns:organisation/xmlns:id').text}"
 
-    xml_doc.xpath('/xmlns:dl-km/xmlns:kontrollmodul-pool/xmlns:item').each do |node|
+    @xml_doc.xpath('/xmlns:dl-km/xmlns:kontrollmodul-pool/xmlns:item').each do |node|
       # Organisations-ID des PV:
       # dl-km/kontrollmodul-pool/item/moduldaten/organisation/id
-      PKM.convert_xpath_l3_id(node, 'xmlns:moduldaten/xmlns:organisation/xmlns:id')
+      PKMXml.convert_xpath_l3_id(node, 'xmlns:moduldaten/xmlns:organisation/xmlns:id')
       org_id_text = node.xpath('xmlns:moduldaten/xmlns:organisation/xmlns:id').text
       puts "# dl-km/kontrollmodul-pool/item/moduldaten/organisation/id = #{org_id_text}"
       # Für PVKM zulässige Organisations-IDs der DL:
       # dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id
       node.xpath('xmlns:moduldaten/xmlns:organisation-pool/xmlns:item').each do |child|
-        PKM.convert_xpath_l3_id(child, 'xmlns:id')
+        PKMXml.convert_xpath_l3_id(child, 'xmlns:id')
         puts "## dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id = #{child.xpath('xmlns:id').text}"
       end
     end
     # Für Anzeige von KVP als Klartext:
     # dl-km/kontrollmodul-pool/item/moduldaten/nummerninterpretation-pool/item[nr=2]/nummerntext-pool/item/nr
-    @xml_doc = xml_doc
   end
 
   def convert_ids_rntm
     # Organisations-ID des RN:
     # rntm/herausgeber/nr
-    PKM.convert_xpath_l3_id(@xml_doc, 'xmlns:rntm/xmlns:herausgeber/xmlns:nr')
+    PKMXml.convert_xpath_l3_id(@xml_doc, 'xmlns:rntm/xmlns:herausgeber/xmlns:nr')
     puts 'Converted following IDs:'
     puts "rntm/herausgeber/nr = #{@xml_doc.xpath('xmlns:rntm/xmlns:herausgeber/xmlns:nr').text}"
 
@@ -118,13 +139,13 @@ class PKMXml
       # Organisations-ID des PV:
       # dl-km/kontrollmodul-pool/item/moduldaten/organisation/id
 
-      PKM.convert_xpath_l3_id(node, 'xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr')
+      PKMXml.convert_xpath_l3_id(node, 'xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr')
       herausgeber_org_id = node.xpath('xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr').text
       puts "# /rntm/tarifmodul-pool/item/tarifmodul/herausgeber/nr/ = #{herausgeber_org_id}"
       # Für PVKM zulässige Organisations-IDs der DL:
       # dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id
       node.xpath('xmlns:tarifmodul/xmlns:organisation-pool/xmlns:item').each do |child|
-        PKM.convert_xpath_l3_id(child, 'xmlns:nr')
+        PKMXml.convert_xpath_l3_id(child, 'xmlns:nr')
         puts "## /rntm/tarifmodul-pool/item/tarifmodul/organisation-pool/item/nr = #{child.xpath('xmlns:nr').text}"
       end
     end
@@ -144,16 +165,23 @@ class PKMXml
     # Organisations-ID des PV:
     # dl-km/kontrollmodul-pool/item/moduldaten/organisation/id
     # PKM.convert_xpath_l3_id(node, '/xmlns:pv-km/xmlns:organisation/xmlns:id')
-    PKM.convert_xpath_l3_id(node, 'xmlns:organisation/xmlns:id')
+    PKMXml.convert_xpath_l3_id(node, 'xmlns:organisation/xmlns:id')
     puts "# pv-km/organisation/id = #{node.xpath('xmlns:organisation/xmlns:id').text}"
     # Für PVKM zulässige Organisations-IDs der DL:
     # dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id
     node.xpath('xmlns:organisation-pool/xmlns:item').each do |child|
-      PKM.convert_xpath_l3_id(child, 'xmlns:id')
+      PKMXml.convert_xpath_l3_id(child, 'xmlns:id')
       puts "## pv-km/organisation-pool/item/id = #{child.xpath('xmlns:id').text}"
     end
     # end
     # Für Anzeige von KVP als Klartext:
     # dl-km/kontrollmodul-pool/item/moduldaten/nummerninterpretation-pool/item[nr=2]/nummerntext-pool/item/nr
+  end
+
+  def convert_ids_cr374
+    ## Ist die Ausgangsschnittstelle 3 bzw. 4 im Kontrollmodul vorhanden?
+    return unless @pkm_data.cr374?
+
+    puts 'CR374 ist umgesetzt. OrgIDs werden angepasst.'
   end
 end
