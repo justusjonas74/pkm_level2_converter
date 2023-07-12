@@ -117,58 +117,57 @@ class PKMXml
     end
   end
 
-  def convert_herausgeber
-    herausgeber_xpath = {
-      dl_km: '/xmlns:dl-km/xmlns:organisation/xmlns:id',
-      pv_km: '/xmlns:pv-km/xmlns:organisation/xmlns:id',
-      rn_tm: '/xmlns:rntm/xmlns:herausgeber/xmlns:nr'
+  def self.pathes
+    {
+      dl_km: {
+        herausgeber_xpath: '/xmlns:dl-km/xmlns:organisation/xmlns:id',
+        enthaltene_pvmodule_xpath: '/xmlns:dl-km/xmlns:kontrollmodul-pool/xmlns:item',
+        herausgeber_enthaltene_pvmodule_xpath: 'xmlns:moduldaten/xmlns:organisation/xmlns:id',
+        zulaessige_organisationen_xpath: 'xmlns:moduldaten/xmlns:organisation-pool/xmlns:item',
+        zulaessige_organisationen_org_id_xpath: 'xmlns:id'
+      },
+      pv_km: {
+        herausgeber_xpath: '/xmlns:pv-km/xmlns:organisation/xmlns:id',
+        enthaltene_pvmodule_xpath: '.',
+        herausgeber_enthaltene_pvmodule_xpath: nil,
+        zulaessige_organisationen_xpath: 'xmlns:organisation-pool/xmlns:item',
+        zulaessige_organisationen_org_id_xpath: 'xmlns:id'
+      },
+      rn_tm: {
+        herausgeber_xpath: '/xmlns:rntm/xmlns:herausgeber/xmlns:nr',
+        enthaltene_pvmodule_xpath: '/xmlns:rntm/xmlns:tarifmodul-pool/xmlns:item',
+        herausgeber_enthaltene_pvmodule_xpath: 'xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr',
+        zulaessige_organisationen_xpath: 'xmlns:tarifmodul/xmlns:organisation-pool/xmlns:item',
+        zulaessige_organisationen_org_id_xpath: 'xmlns:nr'
+      }
     }
-
-    xpath = herausgeber_xpath[type]
-    PKMXml.convert_xpath_l3_id(@xml_doc, xpath)
   end
 
-  # rubocop:disable Metrics/AbcSize
-  def convert_enthaltene_pvmodule
-    iterator_path_collection = {
-      dl_km: '/xmlns:dl-km/xmlns:kontrollmodul-pool/xmlns:item',
-      pv_km: '.',
-      rn_tm: '/xmlns:rntm/xmlns:tarifmodul-pool/xmlns:item'
-    }
-    iterator_path = iterator_path_collection[type]
+  def path_to(symbol)
+    PKMXml.pathes.dig type, symbol
+  end
 
-    @xml_doc.xpath(iterator_path).each do |node|
-      paths = {
-        dl_km: 'xmlns:moduldaten/xmlns:organisation/xmlns:id',
-        pv_km: nil,
-        rn_tm: 'xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr'
-      }
+  def convert_orgid_at_path(symbol, node)
+    path = path_to(symbol)
+    PKMXml.convert_xpath_l3_id(node, path) if path
+  end
 
-      path = paths[type]
-      selected_node = node.at_xpath(path)
-      PKMXml.convert_xpath_l3_id(selected_node, '.') if path
+  def iterate_on_xpath(symbol, node, &block)
+    iterator_path = path_to(symbol)
+    node.xpath(iterator_path).each { |element| block.call(element) }
+  end
 
-      ###### DLKM
-      iterator_path_collection = {
-        dl_km: 'xmlns:moduldaten/xmlns:organisation-pool/xmlns:item',
-        pv_km: 'xmlns:organisation-pool/xmlns:item',
-        rn_tm: 'xmlns:tarifmodul/xmlns:organisation-pool/xmlns:item'
-      }
-      iterator_path = iterator_path_collection[type]
-      node.xpath(iterator_path).each do |child|
-        paths = {
-          dl_km: 'xmlns:id',
-          pv_km: 'xmlns:id',
-          rn_tm: 'xmlns:nr'
-        }
+  def convert_herausgeber
+    convert_orgid_at_path(@xml_doc, :herausgeber_xpath)
 
-        path = paths[type]
-        PKMXml.convert_xpath_l3_id(child, 'xmlns:id')
+    iterate_on_xpath(:enthaltene_pvmodule_xpath, node) do |pvmodul|
+      convert_orgid_at_path(pvmodul, :herausgeber_enthaltene_pvmodule_xpath)
+
+      iterate_on_xpath(:zulaessige_organisationen_xpath, pvmodul) do |organisation|
+        convert_orgid_at_path(organisation, :zulaessige_organisationen_org_id_xpath)
       end
     end
   end
-
-  # rubocop:enable Metrics/AbcSize
 
   def convert_ids_cr374
     ## Ist die Ausgangsschnittstelle 3 bzw. 4 im Kontrollmodul vorhanden?
