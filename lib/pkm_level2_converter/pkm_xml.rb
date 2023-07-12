@@ -9,6 +9,7 @@ class PKMXml
     map = node.at_xpath x_path
     id = map.content.to_i
     map.content = (id + 0x8000).to_s
+    puts "#{map.path.gsub('xmlns:', '')} = #{map.text}"
   end
 
   def self.check_xsd(xsd, xml)
@@ -92,91 +93,82 @@ class PKMXml
   end
 
   def save_file
-    # file = @filename
-    file = @xml_doc
     return unless valid_xml?
 
     # SAVE FILE with NEW name
     new_file_name = convert_file_name
     output = File.open(new_file_name, 'w')
-    output << file.to_xml(indent_text: '', indent: 0).gsub(">\n", '>')
+    output << @xml_doc.to_xml(indent_text: '', indent: 0).gsub(">\n", '>')
     output.close
     puts "File saved as: #{new_file_name}"
   end
 
-  def convert_ids_dlkm
-    # Organisations-ID des DL:
-    # dl-km/organisation/id
-    PKMXml.convert_xpath_l3_id(@xml_doc, 'xmlns:dl-km/xmlns:organisation/xmlns:id')
-    puts 'Converted following IDs:'
-    puts "/dl-km/organisation/id = #{@xml_doc.xpath('/xmlns:dl-km/xmlns:organisation/xmlns:id').text}"
+  def type
+    case @xml_doc.root.name
+    when 'pv-km'
+      :pv_km
+    when 'dl-km'
+      :dl_km
+    when 'rntm'
+      :rn_tm
+    else
+      puts("#{@xml_doc.root.name} wird nicht unterstützt.")
+      nil
+    end
+  end
 
-    @xml_doc.xpath('/xmlns:dl-km/xmlns:kontrollmodul-pool/xmlns:item').each do |node|
-      # Organisations-ID des PV:
-      # dl-km/kontrollmodul-pool/item/moduldaten/organisation/id
-      PKMXml.convert_xpath_l3_id(node, 'xmlns:moduldaten/xmlns:organisation/xmlns:id')
-      org_id_text = node.xpath('xmlns:moduldaten/xmlns:organisation/xmlns:id').text
-      puts "# dl-km/kontrollmodul-pool/item/moduldaten/organisation/id = #{org_id_text}"
-      # Für PVKM zulässige Organisations-IDs der DL:
-      # dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id
-      node.xpath('xmlns:moduldaten/xmlns:organisation-pool/xmlns:item').each do |child|
+  def convert_herausgeber
+    herausgeber_xpath = {
+      dl_km: '/xmlns:dl-km/xmlns:organisation/xmlns:id',
+      pv_km: '/xmlns:pv-km/xmlns:organisation/xmlns:id',
+      rn_tm: '/xmlns:rntm/xmlns:herausgeber/xmlns:nr'
+    }
+
+    xpath = herausgeber_xpath[type]
+    PKMXml.convert_xpath_l3_id(@xml_doc, xpath)
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  def convert_enthaltene_pvmodule
+    iterator_path_collection = {
+      dl_km: '/xmlns:dl-km/xmlns:kontrollmodul-pool/xmlns:item',
+      pv_km: '.',
+      rn_tm: '/xmlns:rntm/xmlns:tarifmodul-pool/xmlns:item'
+    }
+    iterator_path = iterator_path_collection[type]
+
+    @xml_doc.xpath(iterator_path).each do |node|
+      paths = {
+        dl_km: 'xmlns:moduldaten/xmlns:organisation/xmlns:id',
+        pv_km: nil,
+        rn_tm: 'xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr'
+      }
+
+      path = paths[type]
+      selected_node = node.at_xpath(path)
+      PKMXml.convert_xpath_l3_id(selected_node, '.') if path
+
+      ###### DLKM
+      iterator_path_collection = {
+        dl_km: 'xmlns:moduldaten/xmlns:organisation-pool/xmlns:item',
+        pv_km: 'xmlns:organisation-pool/xmlns:item',
+        rn_tm: 'xmlns:tarifmodul/xmlns:organisation-pool/xmlns:item'
+      }
+      iterator_path = iterator_path_collection[type]
+      node.xpath(iterator_path).each do |child|
+        paths = {
+          dl_km: 'xmlns:id',
+          pv_km: 'xmlns:id',
+          rn_tm: 'xmlns:nr'
+        }
+
+        path = paths[type]
         PKMXml.convert_xpath_l3_id(child, 'xmlns:id')
-        puts "## dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id = #{child.xpath('xmlns:id').text}"
       end
     end
-    # Für Anzeige von KVP als Klartext:
-    # dl-km/kontrollmodul-pool/item/moduldaten/nummerninterpretation-pool/item[nr=2]/nummerntext-pool/item/nr
   end
 
-  def convert_ids_rntm
-    # Organisations-ID des RN:
-    # rntm/herausgeber/nr
-    PKMXml.convert_xpath_l3_id(@xml_doc, 'xmlns:rntm/xmlns:herausgeber/xmlns:nr')
-    puts 'Converted following IDs:'
-    puts "rntm/herausgeber/nr = #{@xml_doc.xpath('xmlns:rntm/xmlns:herausgeber/xmlns:nr').text}"
-
-    @xml_doc.xpath('/xmlns:rntm/xmlns:tarifmodul-pool/xmlns:item').each do |node|
-      # Organisations-ID des PV:
-      # dl-km/kontrollmodul-pool/item/moduldaten/organisation/id
-
-      PKMXml.convert_xpath_l3_id(node, 'xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr')
-      herausgeber_org_id = node.xpath('xmlns:tarifmodul/xmlns:herausgeber/xmlns:nr').text
-      puts "# /rntm/tarifmodul-pool/item/tarifmodul/herausgeber/nr/ = #{herausgeber_org_id}"
-      # Für PVKM zulässige Organisations-IDs der DL:
-      # dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id
-      node.xpath('xmlns:tarifmodul/xmlns:organisation-pool/xmlns:item').each do |child|
-        PKMXml.convert_xpath_l3_id(child, 'xmlns:nr')
-        puts "## /rntm/tarifmodul-pool/item/tarifmodul/organisation-pool/item/nr = #{child.xpath('xmlns:nr').text}"
-      end
-    end
-    # Für Anzeige von KVP als Klartext:
-    # dl-km/kontrollmodul-pool/item/moduldaten/nummerninterpretation-pool/item[nr=2]/nummerntext-pool/item/nr
-  end
-
-  def convert_ids_pvkm
-    # Organisations-ID des DL:
-    # dl-km/organisation/id
-    # PKM.convert_xpath_l3_id(@xml_doc, 'xmlns:dl-km/xmlns:organisation/xmlns:id')
-    # puts "Converted following IDs:"
-    # puts "/dl-km/organisation/id = " + @xml_doc.xpath('/xmlns:dl-km/xmlns:organisation/xmlns:id').text
-
-    # @xml_doc.xpath('/xmlns:dl-km/xmlns:kontrollmodul-pool/xmlns:item').each do |node|
-    node = @xml_doc.xpath('/xmlns:pv-km')
-    # Organisations-ID des PV:
-    # dl-km/kontrollmodul-pool/item/moduldaten/organisation/id
-    # PKM.convert_xpath_l3_id(node, '/xmlns:pv-km/xmlns:organisation/xmlns:id')
-    PKMXml.convert_xpath_l3_id(node, 'xmlns:organisation/xmlns:id')
-    puts "# pv-km/organisation/id = #{node.xpath('xmlns:organisation/xmlns:id').text}"
-    # Für PVKM zulässige Organisations-IDs der DL:
-    # dl-km/kontrollmodul-pool/item/moduldaten/organisation-pool/item/id
-    node.xpath('xmlns:organisation-pool/xmlns:item').each do |child|
-      PKMXml.convert_xpath_l3_id(child, 'xmlns:id')
-      puts "## pv-km/organisation-pool/item/id = #{child.xpath('xmlns:id').text}"
-    end
-    # end
-    # Für Anzeige von KVP als Klartext:
-    # dl-km/kontrollmodul-pool/item/moduldaten/nummerninterpretation-pool/item[nr=2]/nummerntext-pool/item/nr
-  end
+  # rubocop:enable Metrics/AbcSize
 
   def convert_ids_cr374
     ## Ist die Ausgangsschnittstelle 3 bzw. 4 im Kontrollmodul vorhanden?
