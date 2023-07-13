@@ -2,14 +2,15 @@
 
 require 'nokogiri'
 require 'pathname'
+require 'pry'
 
 # XML-Klasse zu einem PKM
 class PKMXml
-  def self.convert_xpath_l3_id(node, x_path)
+  def self.convert_xpath_l3_id(node, x_path, parent_path)
     map = node.at_xpath x_path
     id = map.content.to_i
     map.content = (id + 0x8000).to_s
-    puts "#{map.path.gsub('xmlns:', '')} = #{map.text}"
+    puts "#{(parent_path + x_path).gsub('xmlns:', '')} = #{id} => #{map.text}"
   end
 
   def self.check_xsd(xsd, xml)
@@ -71,20 +72,9 @@ class PKMXml
     Pathname.new(dir).join(f.join('_'))
   end
 
-  def convert_org_id_to_level2
-    case @xml_doc.root.name
-    when 'pv-km'
-      convert_ids_pvkm
-    when 'dl-km'
-      convert_ids_dlkm
-    when 'rntm'
-      convert_ids_rntm
-    else
-      puts("#{@xml_doc.root.name} wird nicht unterstützt.")
-    end
-
+  def save_as_level2
+    convert_org_ids_to_level2
     convert_ids_cr374
-    # binding.pry
     save_file
   end
 
@@ -147,24 +137,23 @@ class PKMXml
     PKMXml.pathes.dig type, symbol
   end
 
-  def convert_orgid_at_path(symbol, node)
+  def convert_orgid_at_path(node, symbol, parent_path)
     path = path_to(symbol)
-    PKMXml.convert_xpath_l3_id(node, path) if path
+    PKMXml.convert_xpath_l3_id(node, path, parent_path) if path
   end
 
-  def iterate_on_xpath(symbol, node, &block)
+  def iterate_on_xpath(node, symbol, &block)
     iterator_path = path_to(symbol)
-    node.xpath(iterator_path).each { |element| block.call(element) }
+    node.xpath(iterator_path).each { |element| block.call(element, iterator_path) }
   end
 
-  def convert_herausgeber
-    convert_orgid_at_path(@xml_doc, :herausgeber_xpath)
-
-    iterate_on_xpath(:enthaltene_pvmodule_xpath, node) do |pvmodul|
-      convert_orgid_at_path(pvmodul, :herausgeber_enthaltene_pvmodule_xpath)
-
-      iterate_on_xpath(:zulaessige_organisationen_xpath, pvmodul) do |organisation|
-        convert_orgid_at_path(organisation, :zulaessige_organisationen_org_id_xpath)
+  def convert_org_ids_to_level2
+    convert_orgid_at_path(@xml_doc, :herausgeber_xpath, @xml_doc.path)
+    iterate_on_xpath(@xml_doc, :enthaltene_pvmodule_xpath) do |pvmodul, iterator_path|
+      convert_orgid_at_path(pvmodul, :herausgeber_enthaltene_pvmodule_xpath, iterator_path)
+      iterate_on_xpath(pvmodul, :zulaessige_organisationen_xpath) do |organisation, second_iterator_path|
+        concated_iterator_path = iterator_path + second_iterator_path
+        convert_orgid_at_path(organisation, :zulaessige_organisationen_org_id_xpath, concated_iterator_path)
       end
     end
   end

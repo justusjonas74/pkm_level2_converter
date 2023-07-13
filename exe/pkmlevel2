@@ -6,7 +6,7 @@ require 'pkm_level2_converter'
 if ARGV.first
   orig_file_name = ARGV.first
   converter = PkmLevel2Converter::PKMXml.new(orig_file_name)
-  converter.convert_org_id_to_level2
+  converter.save_as_level2
 
 else
   arr_of_local_xml = Dir['*.xml']
