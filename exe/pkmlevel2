@@ -4,9 +4,7 @@
 require 'pkm_level2_converter'
 
 if ARGV.first
-  orig_file_name = ARGV.first
-  converter = PkmLevel2Converter::PKMXml.new(orig_file_name)
-  converter.save_as_level2
+  PkmLevel2Converter::PKMXml.new(ARGV.first).save_as_level2
 
 else
   arr_of_local_xml = Dir['*.xml']
@@ -15,8 +13,7 @@ else
     puts 'Usage "pkmlevel2 filename.xml"'
   else
     arr_of_local_xml.each do |xml_file|
-      converter = PkmLevel2Converter::PKM.new(xml_file)
-      converter.convert_pkm
+      PkmLevel2Converter::PKMXml.new(xml_file).save_as_level2
     end
   end
   puts 'Press ENTER to close.'
