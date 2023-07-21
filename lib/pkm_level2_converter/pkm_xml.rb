@@ -126,7 +126,7 @@ class PKMXml
         herausgeber_xpath: '/xmlns:pv-km/xmlns:organisation/xmlns:id',
         enthaltene_pvmodule_xpath: '.',
         herausgeber_enthaltene_pvmodule_xpath: nil,
-        zulaessige_organisationen_xpath: 'xmlns:organisation-pool/xmlns:item',
+        zulaessige_organisationen_xpath: 'xmlns:pv-km/xmlns:organisation-pool/xmlns:item',
         zulaessige_organisationen_org_id_xpath: 'xmlns:id'
       },
       rn_tm: {
