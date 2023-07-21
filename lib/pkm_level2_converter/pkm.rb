@@ -15,15 +15,15 @@ class PKM
   def self.pools
     {
       ausgangskontext_pool: {
-        path_of_pool: '//xmlns:rn-tm/xmlns:ausgangskontext-pool | //xmlns:dl-km/xmlns:ausgangskontext-pool',
+        path_of_pool: '//xmlns:rntm/xmlns:ausgangskontext-pool | //xmlns:dl-km/xmlns:ausgangskontext-pool',
         type_of_pool: AusgangskontextPool
       },
       ausgangsschnittstellen_pool: {
-        path_of_pool: '//xmlns:rn-tm/xmlns:ausgangsschnittstelle-pool | //xmlns:dl-km/xmlns:ausgangsschnittstelle-pool',
+        path_of_pool: '//xmlns:rntm/xmlns:ausgangsschnittstelle-pool | //xmlns:dl-km/xmlns:ausgangsschnittstelle-pool',
         type_of_pool: AusgangsschnittstellenPool
       },
       sprache_pool: {
-        path_of_pool: '//xmlns:rn-tm/xmlns:sprache-pool | //xmlns:dl-km/xmlns:sprache-pool',
+        path_of_pool: '//xmlns:rntm/xmlns:sprache-pool | //xmlns:dl-km/xmlns:sprache-pool',
         type_of_pool: SprachePool
       }
     }
