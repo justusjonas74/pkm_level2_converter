@@ -14,8 +14,8 @@ class Pool
   def initialize(xml_node, type)
     @type = type
     @key = xml_node['key'].to_i
-    @children = xml_node.children
-    @items = @children.map.with_index { |parameter, index| type.new(parameter, @key, index) }
+    children = xml_node.children
+    @items = children.map.with_index { |parameter, index| type.new(parameter, @key, index) }
   end
 
   attr_reader :items, :key
@@ -26,6 +26,10 @@ class Pool
 
   def empty?
     (@items.nil? || @items.empty?)
+  end
+
+  def length
+    @items.length
   end
 end
 
@@ -39,6 +43,10 @@ class AusgangskontextPool < Pool
 
   def initialize(xml_node)
     super(xml_node, AusgangskontextPool.type)
+  end
+
+  def get_by_parameter(parameter)
+    @items.select { |ausgangskontext| ausgangskontext.contains_parameter?(parameter) }
   end
 end
 
@@ -68,7 +76,22 @@ class AusgangsschnittstellenPool < Pool
     @items.select(&:cr374?)
   end
 
+  # def cr374_asst_pool_set
+  #   cr374.to_set
+  # end
+
   def cr374?
     !cr374.empty?
+  end
+end
+
+# Ein XML-Sprache-Pool kodiert die Auflistung aller unterstützten Sprachen eines Tarifmoduls.
+class SprachePool < Pool
+  def self.type
+    Sprache
+  end
+
+  def initialize(xml_node)
+    super(xml_node, SprachePool.type)
   end
 end

@@ -1,9 +1,24 @@
 # frozen_string_literal: true
 
+require 'pry'
+
 # Generische Klasse Poolelement
 class Poolelement
+  class << self
+    def add(instance)
+      @all_instances ||= []
+      @all_instances.push(instance)
+    end
+
+    def get_by_ref(ref)
+      @all_instances.find { |element| element.key == ref }
+    end
+    attr_reader :all_instances
+  end
+
   def initialize(key, index)
     @key = key + index
+    Poolelement.add(self)
   end
 
   attr_reader :key
@@ -19,6 +34,12 @@ class Ausgangsparameter < Poolelement
     @nr = node.at('./xmlns:nr').text.to_i
     @name = node.at('./xmlns:name').text
   end
+
+  attr_reader :nr, :name
+
+  def cr374?
+    (nr >= 9000 && nr <= 9999)
+  end
 end
 
 # Eine Ausgangsschnittstelle identifiziert eine Schnittstelle der Geräte-Software, über welche
@@ -28,12 +49,22 @@ class Ausgangsschnittstelle < Poolelement
     super(key, index)
     @nr = asst.at('nr').text.to_i
     @name = asst.at('name').text
-    @parameter_pool_raw = asst.at_xpath('//xmlns:parameter-pool')
-    @parameter_pool = AusgangsparameterPool.new(@parameter_pool_raw)
+    parameter_pool_raw = asst.at_xpath('//xmlns:parameter-pool')
+    @parameter_pool = AusgangsparameterPool.new(parameter_pool_raw)
   end
+
+  attr_reader :parameter_pool, :nr, :name
 
   def cr374?
     (@nr == 3 || @nr == 4)
+  end
+
+  def ermittle_alle_cr374_ausgangskontexte_zu_ausgangsparametern(ausgangskontext_pool)
+    filtered_parameters = @parameter_pool.items.select(&:cr374?).map do |parameter|
+      puts "Parameter Nr. #{parameter.nr} (\"#{parameter.name}\")"
+      ausgangskontext_pool.get_by_parameter(parameter)
+    end
+    filtered_parameters.flatten.to_set
   end
 end
 
@@ -67,6 +98,17 @@ class Ausgangskontext
   def initialize(node, index, key)
     @key = key + index
     @name = node.at('./xmlns:name').text
+    @sprache = node.xpath('./xmlns:sprache/xmlns:ref').map do |sprache_ref|
+      Poolelement.get_by_ref(sprache_ref.text.to_i)
+    end
+    @parameter = node.xpath('./xmlns:parameter/xmlns:ref').map do |parameter_ref|
+      Poolelement.get_by_ref(parameter_ref.text.to_i)
+    end
+    # ausgangsparameter # 1..N
   end
-  attr_reader :key
+  attr_reader :key, :name, :sprache, :parameter
+
+  def contains_parameter?(parameter)
+    @parameter.find { |p| p == parameter }
+  end
 end

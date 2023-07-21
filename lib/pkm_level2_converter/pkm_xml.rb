@@ -2,7 +2,6 @@
 
 require 'nokogiri'
 require 'pathname'
-require 'pry'
 
 # XML-Klasse zu einem PKM
 class PKMXml
@@ -61,6 +60,13 @@ class PKMXml
   end
 
   attr_reader :pkm_data
+
+  def xml_key_items
+    # exclude tarifmodul-pool
+    # exclude kontrollmodul-pool
+    x = '//*[not(ancestor-or-self::xmlns:kontrollmodul-pool) and not(ancestor-or-self::xmlns:tarifmodul-pool) and @key]'
+    @xml_doc.xpath(x)
+  end
 
   def convert_file_name
     pn = Pathname.new(@filename)
@@ -162,6 +168,35 @@ class PKMXml
     ## Ist die Ausgangsschnittstelle 3 bzw. 4 im Kontrollmodul vorhanden?
     return unless @pkm_data.cr374?
 
-    puts 'CR374 ist umgesetzt. OrgIDs werden angepasst.'
+    ausgangskontexte = pkm_data.ermittle_alle_cr374_ausgangskontexte
+    puts "#{ausgangskontexte.length} Ausgangskontext(e) zur Anpassung gefunden"
+    # puts ausgangskontexte
+    ausgangskontexte.each do |ausgangskontext|
+      puts "Ausgangskontext \"#{ausgangskontext.name}\" - Key: #{ausgangskontext.key}"
+
+      convert_keyref_l3_id(ausgangskontext.key)
+    end
   end
+
+  def convert_keyref_l3_id(keyref)
+    node = @xml_doc.at_xpath("//xmlns:text[@ref='#{keyref}']")
+    id = node.content.to_i
+    node.content = (id + 0x8000).to_s
+    puts "Org-ID angepasst: #{id} --> #{node.content}"
+  end
+
+  # def get_node_by_key(key)
+  #   # Schließt aktuell noch die eingebetteten Module aus
+  #   # Funktion unterstellt, dass die @keys in aufsteigender Reihenfolge im xml vorkommen. Ist das immer so?!
+
+  #   previous_node = xml_key_items.first
+  #   xml_key_items.each do |node|
+  #     key_of_node = node.attribute('key').value.to_i
+  #     break if key_of_node > key
+
+  #     previous_node = node
+  #   end
+  #   child_position = 1 + key - previous_node.attribute('key').value.to_i
+  #   previous_node.xpath("xmlns:item[#{child_position}]")
+  # end
 end
