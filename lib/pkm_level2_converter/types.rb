@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'pry'
-
 # Generische Klasse Poolelement
 class Poolelement
   class << self
