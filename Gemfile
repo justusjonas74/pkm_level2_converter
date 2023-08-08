@@ -5,8 +5,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in pkm_level2_converter.gemspec
 gemspec
 
-gem 'nokogiri'
-
 group :development do
   gem 'pry'
   gem 'rake', '~> 13.0'
